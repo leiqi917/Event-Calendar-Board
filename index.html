@@ -190,6 +190,7 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
 .confirm-btns button{flex:1;padding:8px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}
 .confirm-yes{background:#b5494f;color:#fff}
 .confirm-no{background:#eee;color:#555}
+.poster-link-hint{font-size:10px;color:#aaa;margin-top:2px;padding:0 2px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -333,26 +334,36 @@ var STATUS_CFG={open:{label:'已开放报名',cls:'s-open'},soon:{label:'筹备�
 /* ★ EXPORT_ANCHOR_START */
 var currentYear=2026;
 var currentMonth=5;
-var activities=[{"id":2,"name":"四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承","shortName":"全球合规新趋势下的家庭财富保障与传承（长沙）","startDate":"2026-06-04","endDate":"2026-06-04","location":"湖南 · 长沙","people":10,"color":"#C4708A","wisdomId":"100981","desc":"","status":"ended","poster":""},{"id":3,"name":"【一中心】在变局中守护确定性","shortName":"在变局中守护确定性（上海）","startDate":"2026-06-05","endDate":"2026-06-05","location":"上海 · NWC","people":15,"color":"#3D5A80","wisdomId":"100918","desc":"","status":"ended","poster":""},{"id":4,"name":"四中心三部（重庆） 财经下午茶活动","shortName":"财经下午茶活动（重庆）","startDate":"2026-06-09","endDate":"2026-06-09","location":"重庆","people":10,"color":"#C4708A","wisdomId":"101058","desc":"","status":"open","poster":""},{"id":5,"name":"【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】","shortName":"N+读书会—道德经里的财富智慧（郑州）","startDate":"2026-06-10","endDate":"2026-06-10","location":"河南 · 郑州","people":10,"color":"#C4708A","wisdomId":"101196","desc":"","status":"open","poster":""},{"id":7,"name":"6月10日上海ark三中心二部-客户家宴活动","shortName":"客户家宴活动（上海）","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海","people":6,"color":"#6B4E8A","wisdomId":"101248","desc":"","status":"open","poster":""},{"id":8,"name":"【上海ARK四中心一部（郑州）智能时代与 AI 共进】","shortName":"智能时代与 AI 共进（郑州）","startDate":"2026-06-11","endDate":"2026-06-11","location":"河南 · 郑州","people":15,"color":"#C4708A","wisdomId":"101250","desc":"","status":"open","poster":""},{"id":9,"name":"四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行","shortName":"观自在行有度---佛法视角下的财富智慧与人生修行（郑州）","startDate":"2026-06-12","endDate":"2026-06-12","location":"河南 · 郑州","people":20,"color":"#C4708A","wisdomId":"101222","desc":"","status":"open","poster":""},{"id":10,"name":"2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】","shortName":"万象城女性彩妆体验活动（昆明）","startDate":"2026-06-12","endDate":"2026-06-12","location":"云南 · 昆明","people":15,"color":"#5B8FA8","wisdomId":"101241","desc":"","status":"open","poster":""},{"id":13,"name":"6月香港签约团","shortName":"6月香港签约团","startDate":"2026-06-26","endDate":"2026-06-26","location":"中国 · 香港","people":10,"color":"#D4784A","wisdomId":"101098","desc":"","status":"open","poster":""},{"id":17,"name":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","shortName":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","startDate":"2026-06-05","endDate":"2026-06-05","location":"日本 · 东京","people":30,"color":"#4A7C59","wisdomId":"101049","desc":"【东京雅叙 · 诺亚 Olive Japan 闭门私享会】\n把家、把生活、把下一代，安放在东京之后——接下来的问题，是与谁同行。\n立足日本，投资全球。6月5日（周五）午后，东京，将在日华人家族请到一起：\n[跳跳]诺亚控股董事长原力，携手三井住友、吉宝等特邀合作伙伴，谈在日布局、全球资产配置、税务与跨境传承——以及财富之外，我们到底想留给下一代什么。\n一个穿越周期的原力视角，一份关于全球华人财富往哪去的真实判断。","status":"ended","poster":""},{"id":18,"name":"正行骑士汇|马术私享体验","shortName":"正行骑士汇|马术私享体验","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海 · 蟠龙天地","people":10,"color":"#4A7C59","wisdomId":"线下报名","desc":"","status":"ended","poster":""},{"id":19,"name":"【走进狮城-ARK新加坡】特别加场","shortName":"【走进狮城-ARK新加坡】特别加场","startDate":"2026-06-16","endDate":"2026-06-18","location":"新加坡","people":25,"color":"#4A7C59","wisdomId":"101146","desc":"【6.16-18日走进新加坡】\n一座花园之城,读懂全球华人的财富未来。\n\n新加坡,是全球资本与华人家族共同选择的坐标。6月16日-18日三天,我们带您走进狮城的肌理: 从清晨街巷的书话漫步,到 AI与资本市场的最前沿:从建国企业的长期主义,到一蔬一饭的人间烟火。 \n\n走进 Noah Ark 新加坡,谈穿越周期的判断,与同行者一起,把\"立足新加坡、配置全球\"从一句话,变成可触可感的路径。","status":"open","poster":""},{"id":20,"name":"全球财富视野.香港站","shortName":"全球财富视野.香港站","startDate":"2026-06-25","endDate":"2026-06-27","location":"中国 · 香港","people":20,"color":"#4A7C59","wisdomId":"101098","desc":"三天议程 · 四大维度\n全球视野 · 洞见当下\n聚焦出海香港的时代命题，特邀香港科技青年联合会副秘书长现场分享，带您读懂香港作为全球化枢纽的真实底色。\nAI赋能 · 服务升级\nAI如何重塑顾问与客户之间的陪伴方式——从需求识别到长期规划，让每一步财富决策都有更智慧的支撑。\n出海参访 · 现场连接\n走进香港科技青年会出海企业交流现场，与同频的企业主、二代接班人面对面——这不只是一次参访，更是一次有质量的同路人相遇。\n龙舟观赛 · 同舟收官\n亲临永明香港国际龙舟邀请赛，在维港水岸感受这座城市最鲜活的一面。","status":"open","poster":""}];
+var activities=[
+{"id":2,"name":"四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承","shortName":"全球合规新趋势下的家庭财富保障与传承（长沙）","startDate":"2026-06-04","endDate":"2026-06-04","location":"湖南 · 长沙","people":10,"color":"#C4708A","wisdomId":"100981","desc":"","status":"ended","poster":""},
+{"id":3,"name":"【一中心】在变局中守护确定性","shortName":"在变局中守护确定性（上海）","startDate":"2026-06-05","endDate":"2026-06-05","location":"上海 · NWC","people":15,"color":"#3D5A80","wisdomId":"100918","desc":"","status":"ended","poster":""},
+{"id":4,"name":"四中心三部（重庆） 财经下午茶活动","shortName":"财经下午茶活动（重庆）","startDate":"2026-06-09","endDate":"2026-06-09","location":"重庆","people":10,"color":"#C4708A","wisdomId":"101058","desc":"","status":"open","poster":""},
+{"id":5,"name":"【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】","shortName":"N+读书会—道德经里的财富智慧（郑州）","startDate":"2026-06-10","endDate":"2026-06-10","location":"河南 · 郑州","people":10,"color":"#C4708A","wisdomId":"101196","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8810%E6%97%A5%E8%AF%BB%E4%B9%A6%E4%BC%9A(1).jpg"},
+{"id":7,"name":"6月10日上海ark三中心二部-客户家宴活动","shortName":"客户家宴活动（上海）","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海","people":6,"color":"#6B4E8A","wisdomId":"101248","desc":"","status":"open","poster":""},
+{"id":8,"name":"【上海ARK四中心一部（郑州）智能时代与 AI 共进】","shortName":"智能时代与 AI 共进（郑州）","startDate":"2026-06-11","endDate":"2026-06-11","location":"河南 · 郑州","people":15,"color":"#C4708A","wisdomId":"101250","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8811%E6%97%A5%E6%99%BA%E8%83%BD%E6%97%B6%E4%BB%A3%E4%B8%8EAI%E5%85%B1%E8%BF%9B.jpg"},
+{"id":9,"name":"四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行","shortName":"观自在行有度---佛法视角下的财富智慧与人生修行（郑州）","startDate":"2026-06-12","endDate":"2026-06-12","location":"河南 · 郑州","people":20,"color":"#C4708A","wisdomId":"101222","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8812%E6%97%A5%E7%A4%BC%E4%BD%9B.jpg"},
+{"id":10,"name":"2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】","shortName":"万象城女性彩妆体验活动（昆明）","startDate":"2026-06-12","endDate":"2026-06-12","location":"云南 · 昆明","people":15,"color":"#5B8FA8","wisdomId":"101241","desc":"","status":"open","poster":""},
+{"id":13,"name":"6月香港签约团","shortName":"6月香港签约团","startDate":"2026-06-26","endDate":"2026-06-26","location":"中国 · 香港","people":10,"color":"#D4784A","wisdomId":"101098","desc":"","status":"open","poster":""},
+{"id":17,"name":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","shortName":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","startDate":"2026-06-05","endDate":"2026-06-05","location":"日本 · 东京","people":30,"color":"#4A7C59","wisdomId":"101049","desc":"【东京雅叙 · 诺亚 Olive Japan 闭门私享会】\n把家、把生活、把下一代，安放在东京之后——接下来的问题，是与谁同行。\n立足日本，投资全球。6月5日（周五）午后，东京，将在日华人家族请到一起：\n[跳跳]诺亚控股董事长原力，携手三井住友、吉宝等特邀合作伙伴，谈在日布局、全球资产配置、税务与跨境传承——以及财富之外，我们到底想留给下一代什么。\n一个穿越周期的原力视角，一份关于全球华人财富往哪去的真实判断。","status":"ended","poster":""},
+{"id":18,"name":"正行骑士汇|马术私享体验","shortName":"正行骑士汇|马术私享体验","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海 · 蟠龙天地","people":10,"color":"#4A7C59","wisdomId":"线下报名","desc":"","status":"ended","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_%E6%AD%A3%E8%A1%8C%E9%AA%91%E5%A3%AB%E6%B1%87%E9%A9%AC%E6%9C%AF%E7%A7%81%E4%BA%AB%E4%BD%93%E9%AA%8C.jpg"},
+{"id":19,"name":"【走进狮城-ARK新加坡】特别加场","shortName":"【走进狮城-ARK新加坡】特别加场","startDate":"2026-06-16","endDate":"2026-06-18","location":"新加坡","people":25,"color":"#4A7C59","wisdomId":"101146","desc":"【6.16-18日走进新加坡】\n一座花园之城,读懂全球华人的财富未来。\n\n新加坡,是全球资本与华人家族共同选择的坐标。6月16日-18日三天,我们带您走进狮城的肌理: 从清晨街巷的书话漫步,到 AI与资本市场的最前沿:从建国企业的长期主义,到一蔬一饭的人间烟火。\n\n走进 Noah Ark 新加坡,谈穿越周期的判断,与同行者一起,把\"立足新加坡、配置全球\"从一句话,变成可触可感的路径。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8816%E6%97%A5%E6%96%B0%E5%8A%A0%E5%9D%A1.jpg"},
+{"id":20,"name":"全球财富视野.香港站","shortName":"全球财富视野.香港站","startDate":"2026-06-25","endDate":"2026-06-27","location":"中国 · 香港","people":20,"color":"#4A7C59","wisdomId":"101098","desc":"三天议程 · 四大维度\n全球视野 · 洞见当下\n聚焦出海香港的时代命题，特邀香港科技青年联合会副秘书长现场分享，带您读懂香港作为全球化枢纽的真实底色。\nAI赋能 · 服务升级\nAI如何重塑顾问与客户之间的陪伴方式——从需求识别到长期规划，让每一步财富决策都有更智慧的支撑。\n出海参访 · 现场连接\n走进香港科技青年会出海企业交流现场，与同频的企业主、二代接班人面对面——这不只是一次参访，更是一次有质量的同路人相遇。\n龙舟观赛 · 同舟收官\n亲临永明香港国际龙舟邀请赛，在维港水岸感受这座城市最鲜活的一面。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8825%E6%97%A5%E9%A6%99%E6%B8%AF%E7%AB%99.jpg"}
+];
 var nextId=21;
 /* ★ EXPORT_ANCHOR_END */
 var isPresentMode=true;
 
-/* ---- 存储 ---- */
 function saveToStorage(){
   try{
     localStorage.setItem(STORAGE_KEY,JSON.stringify({activities:activities,nextId:nextId,year:currentYear,month:currentMonth}));
     showSaveTip();
   }catch(e){alert('⚠️ 存储空间不足，建议先导出备份再清理。');}
 }
-
-/* ★ 核心修复：硬编码数据优先，LocalStorage只在有更新时才覆盖 */
 function loadFromStorage(){
   try{
     var raw=localStorage.getItem(STORAGE_KEY);
     if(!raw)return false;
     var d=JSON.parse(raw);
-    /* 只有当存储版本的nextId比硬编码大时（说明用户有新增/编辑），才加载存储数据 */
     if(d.nextId&&d.nextId>nextId){
       if(d.activities)activities=d.activities;
       if(d.nextId)nextId=d.nextId;
@@ -361,7 +372,6 @@ function loadFromStorage(){
     return false;
   }catch(e){return false;}
 }
-
 function clearStorage(){
   if(!confirm('确定要清除所有已保存的活动数据吗？此操作不可撤销。'))return;
   localStorage.removeItem(STORAGE_KEY);
@@ -374,8 +384,6 @@ function showSaveTip(){
   clearTimeout(window._stTimer);
   window._stTimer=setTimeout(function(){t.style.opacity='0';},2500);
 }
-
-/* ---- 工具 ---- */
 function toDS(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
 function parseDate(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
 function fmtCN(s){var d=parseDate(s);return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';}
@@ -387,8 +395,6 @@ function makeStatusTag(status){
   var cfg=STATUS_CFG[status]||STATUS_CFG['soon'];
   return '<span class="status-tag '+cfg.cls+'"><span class="sdot"></span>'+cfg.label+'</span>';
 }
-
-/* ---- 星屑 ---- */
 function generateStars(){
   var c=document.getElementById('starsContainer');if(!c)return;c.innerHTML='';
   for(var i=0;i<36;i++){
@@ -398,8 +404,6 @@ function generateStars(){
     c.appendChild(s);
   }
 }
-
-/* ---- 查询某天活动 ---- */
 function getActsForDate(ds){
   var d=parseDate(ds),res=[];
   for(var i=0;i<activities.length;i++){
@@ -412,8 +416,6 @@ function getActsForDate(ds){
   }
   return res;
 }
-
-/* ---- 渲染日历 ---- */
 function renderCalendar(){
   var y=currentYear,m=currentMonth;
   document.getElementById('yearMonthText').textContent=y+'年'+(m+1)+'月';
@@ -445,10 +447,7 @@ function renderCalendar(){
         tag.className='event-tag';
         tag.style.background=item.activity.color;
         tag.textContent=item.activity.shortName||item.activity.name;
-        tag.onclick=function(ev){
-          ev.stopPropagation();
-          openSingleActivity(item.activity,cDS,HOLIDAYS[cDS]||null);
-        };
+        tag.onclick=function(ev){ev.stopPropagation();openSingleActivity(item.activity,cDS,HOLIDAYS[cDS]||null);};
         cell.appendChild(tag);
       })(acts[j],ds);
     }
@@ -464,8 +463,6 @@ function renderCalendar(){
   }
   updateStats();
 }
-
-/* ---- 统计 ---- */
 function updateStats(){
   var first=new Date(currentYear,currentMonth,1),last=new Date(currentYear,currentMonth+1,0);
   var tot=0,ppl=0,grp=0,reg=0;
@@ -478,8 +475,6 @@ function updateStats(){
   document.getElementById('statGroup').textContent=grp;
   document.getElementById('statRegion').textContent=reg;
 }
-
-/* ---- 弹窗逻辑 ---- */
 function openHolidayOnly(ds,hInfo){
   var html='<div class="modal-title">📅 '+fmtCN(ds)+'</div>'
     +'<div class="modal-holiday-info"><div style="font-weight:700;margin-bottom:3px">'+(HOLIDAY_TYPE_LABEL[hInfo.type]||'')+'</div><div>'+(hInfo.desc||hInfo.label)+'</div></div>'
@@ -543,15 +538,30 @@ function openPosterModal(id){
       +'<button class="poster-replace-btn" onclick="replacePoster('+id+')">🔄 重新上传图片</button>'
       +'</div>';
   }else{
-    html='<div class="upload-zone">'
+    html='<div style="margin-bottom:12px">'
+      +'<div class="upload-zone">'
       +'<input type="file" accept="image/*" onchange="handleUpload(this,'+id+')"/>'
       +'<div class="upload-zone-icon">📁</div>'
       +'<div class="upload-zone-text">点击上传邀请函图片</div>'
       +'<div class="upload-zone-sub">支持 JPG / PNG · 建议上传高清原图</div>'
-      +'</div>';
+      +'</div></div>'
+      +'<div style="text-align:center;color:#bbb;font-size:11px;margin:8px 0">— 或者粘贴图片链接 —</div>'
+      +'<div style="display:flex;gap:6px;margin-top:4px">'
+      +'<input id="posterLinkInput_'+id+'" class="form-input" placeholder="粘贴 GitHub raw 图片链接" style="flex:1;font-size:11px"/>'
+      +'<button onclick="applyPosterLink('+id+')" style="background:#c5a864;color:#fff;border:none;border-radius:6px;padding:0 10px;font-size:12px;cursor:pointer;white-space:nowrap">确认</button>'
+      +'</div>'
+      +'<div class="poster-link-hint">格式：https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/文件名.jpg</div>';
   }
   document.getElementById('posterModalInner').innerHTML=html;
   openModal('posterModal');
+}
+function applyPosterLink(id){
+  var inp=document.getElementById('posterLinkInput_'+id);
+  if(!inp||!inp.value.trim()){alert('请先粘贴图片链接');return;}
+  for(var i=0;i<activities.length;i++){
+    if(activities[i].id===id){activities[i].poster=inp.value.trim();break;}
+  }
+  saveToStorage();openPosterModal(id);
 }
 function replacePoster(id){
   for(var i=0;i<activities.length;i++){if(activities[i].id===id){activities[i].poster='';break;}}
@@ -589,8 +599,6 @@ function openIntroModal(id){
   document.getElementById('introModalInner').innerHTML=html;
   openModal('introModal');
 }
-
-/* ---- 活动列表 ---- */
 function renderActivityList(){
   var c=document.getElementById('activityList');if(!c)return;
   c.innerHTML='';
@@ -614,8 +622,6 @@ function renderActivityList(){
     c.appendChild(item);
   }
 }
-
-/* ---- 表单 ---- */
 function buildFormHTML(act){
   var chips='';
   for(var i=0;i<COLORS.length;i++)
@@ -642,6 +648,9 @@ function buildFormHTML(act){
     +'</div></div>'
     +'<div class="form-row"><label class="form-label">🔖 智慧ID</label>'
     +'<input class="form-input" data-field="wisdomId" value="'+(act?escH(act.wisdomId||''):'')+'" placeholder="选填"></div>'
+    +'<div class="form-row"><label class="form-label">🖼 邀请函图片链接</label>'
+    +'<input class="form-input" data-field="poster" value="'+(act?escH(act.poster||''):'')+'" placeholder="粘贴 GitHub raw 图片链接，留空可手动上传"></div>'
+    +'<div class="poster-link-hint">格式：https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/文件名.jpg</div>'
     +'<div class="form-row"><label class="form-label">活动简介</label>'
     +'<textarea class="form-input" data-field="desc" style="height:72px;resize:vertical" placeholder="输入活动介绍文字（选填）">'+(act?escH(act.desc||''):'')+'</textarea></div>'
     +'<div class="form-row"><label class="form-label">活动状态</label>'
@@ -695,6 +704,7 @@ function saveFromForm(btn){
         a.location=gfv(c,'location');a.people=parseInt(gfv(c,'people'))||0;
         a.color=color;a.wisdomId=gfv(c,'wisdomId');
         a.desc=gfv(c,'desc');a.status=gfv(c,'status');
+        var np=gfv(c,'poster');if(np)a.poster=np;
         break;
       }
     }
@@ -702,7 +712,8 @@ function saveFromForm(btn){
     activities.push({id:genId(),name:name,shortName:sn,startDate:sd,endDate:ed,
       location:gfv(c,'location'),people:parseInt(gfv(c,'people'))||0,
       color:color,wisdomId:gfv(c,'wisdomId'),
-      desc:gfv(c,'desc'),status:gfv(c,'status'),poster:''});
+      desc:gfv(c,'desc'),status:gfv(c,'status'),
+      poster:gfv(c,'poster')||''});
     closeModal('addModal');
   }
   document.querySelectorAll('.edit-form.open').forEach(function(x){x.classList.remove('open');});
@@ -733,53 +744,34 @@ function changeMonth(d){
   if(currentMonth<0){currentMonth=11;currentYear--;}
   renderCalendar();
 }
-
-/* ★ 核心导出函数 */
 function buildExportHTML(){
   var snap='var currentYear='+currentYear+';\nvar currentMonth='+currentMonth+';\nvar activities='+JSON.stringify(activities)+';\nvar nextId='+nextId+';';
   var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
   html=html.replace(/\/\* ★ EXPORT_ANCHOR_START \*\/[\s\S]*?\/\* ★ EXPORT_ANCHOR_END \*\//,snap);
-  /* ★ 同时清除LocalStorage键，防止导出后被旧数据干扰 */
-  html=html.replace('loadFromStorage();','/* loadFromStorage disabled in export */');
   return html;
 }
 function exportEditable(){
   var html=buildExportHTML();
-  /* 还原loadFromStorage，编辑版保留存储功能 */
-  html=html.replace('/* loadFromStorage disabled in export */','loadFromStorage();');
   var blob=new Blob([html],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url;
-  a.download='ARK上海_'+(currentMonth+1)+'月行事历_可编辑版.html';
-  a.click();
-  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+  a.href=url;a.download='ARK上海_'+(currentMonth+1)+'月行事历_可编辑版.html';
+  a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);
 }
 function exportReadonly(){
   var html=buildExportHTML();
-  var hideCSS='<style id="xhs">'
-    +'#editPanel,#togglePresentBtn,#calToolbar,'
-    +'.btn-add-activity,.save-bar,.activity-list,'
-    +'.panel-header,.holiday-legend{display:none!important}'
-    +'.main-content{flex:1!important}'
-    +'</style>';
+  var hideCSS='<style id="xhs">#editPanel,#togglePresentBtn,#calToolbar,.btn-add-activity,.save-bar,.activity-list,.panel-header,.holiday-legend{display:none!important}.main-content{flex:1!important}</style>';
   html=html.replace('</head>',hideCSS+'\n</head>');
   var blob=new Blob([html],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url;
-  a.download='ARK上海_'+(currentMonth+1)+'月行事历_只读版.html';
-  a.click();
-  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+  a.href=url;a.download='ARK上海_'+(currentMonth+1)+'月行事历_只读版.html';
+  a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);
 }
-
-/* ---- 弹窗遮罩关闭 ---- */
 ['inviteModal','addModal','confirmModal','posterModal','introModal'].forEach(function(mid){
   var el=document.getElementById(mid);
   if(el)el.addEventListener('click',function(e){if(e.target===el)closeModal(mid);});
 });
-
-/* ---- 初始化 ---- */
 document.addEventListener('DOMContentLoaded',function(){
   generateStars();
   loadFromStorage();
