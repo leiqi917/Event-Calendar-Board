@@ -80,11 +80,17 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
 .gold-divider{display:flex;align-items:center;margin:16px 40px 0;position:relative;z-index:2}
 .gold-divider::before,.gold-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c5a864,transparent)}
 .gold-divider span{color:#c5a864;font-size:10px;margin:0 8px;letter-spacing:2px}
-.stats-bar{display:flex;gap:16px;padding:18px 32px;position:relative;align-items:stretch}
+.stats-bar{display:flex;gap:16px;padding:18px 32px 0;position:relative;align-items:stretch}
 .stat-card{flex:1;text-align:center;background:rgba(255,255,255,.62);border:1px solid rgba(197,168,100,.35);border-radius:10px;padding:14px 10px;backdrop-filter:blur(6px);transition:box-shadow .2s}
 .stat-card:hover{box-shadow:0 4px 16px rgba(197,168,100,.2)}
 .stat-num{font-size:30px;font-weight:700;color:#c5a864;line-height:1.1;font-family:Georgia,serif}
 .stat-label{font-size:11px;color:#7a8a70;margin-top:4px;letter-spacing:1px}
+/* ★ 活动类型说明紧跟统计栏 */
+.legend-section{margin:12px 32px;padding:12px 20px;background:rgba(255,255,255,.55);border:1px solid rgba(197,168,100,.25);border-radius:10px;backdrop-filter:blur(4px)}
+.legend-section-title{font-size:10px;font-weight:700;color:#a09060;letter-spacing:2.5px;margin-bottom:10px;text-align:center;font-family:Georgia,serif}
+.legend-items{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;align-items:center}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#5a6a50;letter-spacing:.3px;white-space:nowrap}
+.legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .cal-toolbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px}
 .month-nav{display:flex;align-items:center;gap:14px;padding:14px 0 8px}
 .month-nav button{background:none;border:1.5px solid rgba(197,168,100,.4);color:#c5a864;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
@@ -122,11 +128,6 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
 .footer-divider::before,.footer-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c5a864,transparent)}
 .footer-divider span{color:#c5a864;font-size:10px;margin:0 6px}
 .footer-brand{text-align:center;padding:12px 0 8px;font-size:13px;letter-spacing:4px;color:#c5a864;font-family:Georgia,serif;font-weight:600}
-.legend-section{margin:4px 32px 12px;padding:12px 20px;background:rgba(255,255,255,.55);border:1px solid rgba(197,168,100,.25);border-radius:10px;backdrop-filter:blur(4px)}
-.legend-section-title{font-size:10px;font-weight:700;color:#a09060;letter-spacing:2.5px;margin-bottom:10px;text-align:center;font-family:Georgia,serif}
-.legend-items{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;align-items:center}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#5a6a50;letter-spacing:.3px;white-space:nowrap}
-.legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .footer-note{text-align:center;font-size:11px;color:#aaa;padding:0 24px 24px;line-height:1.8;letter-spacing:.5px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:20000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.show{opacity:1;pointer-events:all}
@@ -160,6 +161,8 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
 .poster-hint{font-size:12px;color:#c5a864;padding:10px 12px;background:#fffbf2;border-radius:8px;margin-bottom:10px;line-height:1.9}
 .poster-download-btn{display:block;width:100%;padding:11px 0;background:linear-gradient(135deg,#1a1a2e,#2e4a35);color:#c5a864;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1px;text-decoration:none;text-align:center;margin-bottom:8px}
 .poster-replace-btn{width:100%;padding:9px;background:#f5f5f5;color:#666;border:none;border-radius:10px;font-size:12px;cursor:pointer;margin-top:4px}
+/* ★ 只读模式隐藏重新上传按钮 */
+.readonly-mode .poster-replace-btn{display:none!important}
 .upload-zone{border:2px dashed rgba(197,168,100,.45);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;position:relative;background:rgba(255,251,242,.7);transition:.2s}
 .upload-zone:hover{border-color:#c5a864;background:#fffbf2}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -195,19 +198,19 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
 </head>
 <body>
 <div class="page-border"></div>
-<button id="togglePresentBtn" onclick="togglePresent()">🖥 演示模式</button>
+<button id="togglePresentBtn" onclick="togglePresent()">✏️ 编辑模式</button>
 
 <div class="modal-overlay" id="inviteModal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('inviteModal')">✕</button>
-    <div id="inviteModalContent"></div>
+    <div id="inviteModalContent"><div class="modal-title">📅 2026年6月11日</div><div class="modal-event-block"><span class="modal-badge" style="background:#C4708A">四中心活动</span><span class="status-tag s-open"><span class="sdot"></span>已开放报名</span><div class="modal-meta" style="margin-top:8px"><strong>日期</strong>：2026年6月11日 ~ 2026年6月12日<br><strong>活动名称</strong>：端午家宴活动（长沙）<br><strong>地点</strong>：湖南 · 长沙<br><strong>可覆盖人数</strong>：15 人</div><div class="wisdom-id-row"><span class="wisdom-id-label">🔖 智慧ID</span><span class="wisdom-id-value">101264</span></div><div class="modal-action-row"><button class="btn-action-invite" onclick="openPosterModal(22)">🖼 活动邀请函</button><button class="btn-action-intro" onclick="openIntroModal(22)">📋 活动简介</button></div></div></div>
   </div>
 </div>
 <div class="modal-overlay" id="posterModal">
   <div class="modal-box" style="max-width:400px">
     <button class="modal-close" onclick="closeModal('posterModal')">✕</button>
     <div style="font-size:15px;font-weight:700;color:#2e4a35;margin-bottom:14px">🖼 活动邀请函</div>
-    <div id="posterModalInner"></div>
+    <div id="posterModalInner"><div class="poster-modal-inner"><img src="https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8816%E6%97%A5%E6%96%B0%E5%8A%A0%E5%9D%A1.jpg" alt="活动邀请函"><div class="poster-hint">📱 微信中长按图片→保存到相册<br>💻 电脑端右键图片→另存为</div><a href="https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8816%E6%97%A5%E6%96%B0%E5%8A%A0%E5%9D%A1.jpg" download="【走进狮城-ARK新加坡】特别加场_邀请函.jpg" class="poster-download-btn">⬇ 下载高清邀请函</a><button class="poster-replace-btn" onclick="replacePoster(19)">🔄 重新上传图片</button></div></div>
   </div>
 </div>
 <div class="modal-overlay" id="introModal">
@@ -247,38 +250,53 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
     </div>
     <button class="btn-add-activity" onclick="openAddModal()">＋ 新增活动</button>
     <div class="save-bar">
-      <span id="saveTip"></span>
+      <span id="saveTip" style="opacity: 0;">✅ 已保存 14:15</span>
       <button class="btn-clear-storage" onclick="clearStorage()">🗑 清除存档</button>
     </div>
-    <div class="activity-list" id="activityList"></div>
+    <div class="activity-list" id="activityList"><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承">四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承</span><span class="item-date">2026-06-04</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(2)">✏️</button><button class="btn-del" onclick="confirmDelete(2)">🗑️</button></div></div><div class="edit-form" id="editForm_2"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#3D5A80"></span><span class="item-name" title="【一中心】在变局中守护确定性">【一中心】在变局中守护确定性</span><span class="item-date">2026-06-05</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(3)">✏️</button><button class="btn-del" onclick="confirmDelete(3)">🗑️</button></div></div><div class="edit-form" id="editForm_3"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="四中心三部（重庆） 财经下午茶活动">四中心三部（重庆） 财经下午茶活动</span><span class="item-date">2026-06-09</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(4)">✏️</button><button class="btn-del" onclick="confirmDelete(4)">🗑️</button></div></div><div class="edit-form" id="editForm_4"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#6B4E8A"></span><span class="item-name" title="客户存续沟通会·家宴（上海）">客户存续沟通会·家宴（上海）</span><span class="item-date">2026-06-09</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(21)">✏️</button><button class="btn-del" onclick="confirmDelete(21)">🗑️</button></div></div><div class="edit-form" id="editForm_21"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】">【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】</span><span class="item-date">2026-06-10</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(5)">✏️</button><button class="btn-del" onclick="confirmDelete(5)">🗑️</button></div></div><div class="edit-form" id="editForm_5"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#6B4E8A"></span><span class="item-name" title="6月10日上海ark三中心二部-客户家宴活动">6月10日上海ark三中心二部-客户家宴活动</span><span class="item-date">2026-06-10</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(7)">✏️</button><button class="btn-del" onclick="confirmDelete(7)">🗑️</button></div></div><div class="edit-form" id="editForm_7"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#4A7C59"></span><span class="item-name" title="正行骑士汇|马术私享体验">正行骑士汇|马术私享体验</span><span class="item-date">2026-06-10</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(18)">✏️</button><button class="btn-del" onclick="confirmDelete(18)">🗑️</button></div></div><div class="edit-form" id="editForm_18"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="【上海ARK四中心一部（郑州）智能时代与 AI 共进】">【上海ARK四中心一部（郑州）智能时代与 AI 共进】</span><span class="item-date">2026-06-11</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(8)">✏️</button><button class="btn-del" onclick="confirmDelete(8)">🗑️</button></div></div><div class="edit-form" id="editForm_8"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="端午家宴活动（长沙）">端午家宴活动（长沙）</span><span class="item-date">2026-06-11 ~ 2026-06-12</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(22)">✏️</button><button class="btn-del" onclick="confirmDelete(22)">🗑️</button></div></div><div class="edit-form" id="editForm_22"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#C4708A"></span><span class="item-name" title="四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行">四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行</span><span class="item-date">2026-06-12</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(9)">✏️</button><button class="btn-del" onclick="confirmDelete(9)">🗑️</button></div></div><div class="edit-form" id="editForm_9"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#5B8FA8"></span><span class="item-name" title="2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】">2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】</span><span class="item-date">2026-06-12</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(10)">✏️</button><button class="btn-del" onclick="confirmDelete(10)">🗑️</button></div></div><div class="edit-form" id="editForm_10"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#4A7C59"></span><span class="item-name" title="【走进狮城-ARK新加坡】特别加场">【走进狮城-ARK新加坡】特别加场</span><span class="item-date">2026-06-16 ~ 2026-06-18</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(19)">✏️</button><button class="btn-del" onclick="confirmDelete(19)">🗑️</button></div></div><div class="edit-form" id="editForm_19"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#4A7C59"></span><span class="item-name" title="全球财富视野.香港站">全球财富视野.香港站</span><span class="item-date">2026-06-25 ~ 2026-06-27</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(20)">✏️</button><button class="btn-del" onclick="confirmDelete(20)">🗑️</button></div></div><div class="edit-form" id="editForm_20"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#D4784A"></span><span class="item-name" title="6月香港签约团">6月香港签约团</span><span class="item-date">2026-06-26</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(13)">✏️</button><button class="btn-del" onclick="confirmDelete(13)">🗑️</button></div></div><div class="edit-form" id="editForm_13"></div></div><div class="activity-item"><div class="activity-item-header"><span class="color-dot" style="background:#4A7C59"></span><span class="item-name" title="东京雅叙 · 诺亚 Olive Japan 闭门私享会">东京雅叙 · 诺亚 Olive Japan 闭门私享会</span><span class="item-date">2026-06-05</span><div class="item-actions"><button class="btn-edit" onclick="toggleEditForm(17)">✏️</button><button class="btn-del" onclick="confirmDelete(17)">🗑️</button></div></div><div class="edit-form" id="editForm_17"></div></div></div>
   </div>
 
   <div class="main-content" id="mainContent">
     <div class="banner">
       <div class="banner-halo"></div>
-      <div class="stars" id="starsContainer"></div>
+      <div class="stars" id="starsContainer"><div class="star" style="width: 2.57899px; height: 2.57899px; top: 89.914%; left: 98.3179%; animation-delay: 2.54395s; animation-duration: 3.42031s;"></div><div class="star" style="width: 2.46026px; height: 2.46026px; top: 86.1862%; left: 51.5645%; animation-delay: 2.11622s; animation-duration: 2.16419s;"></div><div class="star" style="width: 1.90648px; height: 1.90648px; top: 76.5178%; left: 44.5067%; animation-delay: 2.93551s; animation-duration: 4.14348s;"></div><div class="star" style="width: 3.65127px; height: 3.65127px; top: 33.271%; left: 71.7463%; animation-delay: 0.473822s; animation-duration: 2.84345s;"></div><div class="star" style="width: 3.50356px; height: 3.50356px; top: 62.0477%; left: 17.2609%; animation-delay: 2.90819s; animation-duration: 2.53239s;"></div><div class="star" style="width: 1.12288px; height: 1.12288px; top: 69.7923%; left: 78.3904%; animation-delay: 2.5736s; animation-duration: 2.98806s;"></div><div class="star" style="width: 2.14128px; height: 2.14128px; top: 32.8952%; left: 45.9866%; animation-delay: 0.637205s; animation-duration: 3.78986s;"></div><div class="star" style="width: 3.56176px; height: 3.56176px; top: 8.0263%; left: 17.9316%; animation-delay: 2.60377s; animation-duration: 3.63758s;"></div><div class="star" style="width: 2.71716px; height: 2.71716px; top: 19.4322%; left: 94.0084%; animation-delay: 1.8319s; animation-duration: 4.15501s;"></div><div class="star" style="width: 2.77961px; height: 2.77961px; top: 33.4294%; left: 15.7548%; animation-delay: 0.0552896s; animation-duration: 3.84001s;"></div><div class="star" style="width: 3.03924px; height: 3.03924px; top: 21.5871%; left: 27.3297%; animation-delay: 1.20511s; animation-duration: 3.34513s;"></div><div class="star" style="width: 2.41757px; height: 2.41757px; top: 97.5032%; left: 91.6057%; animation-delay: 2.86298s; animation-duration: 3.57793s;"></div><div class="star" style="width: 3.93593px; height: 3.93593px; top: 58.7375%; left: 17.9497%; animation-delay: 0.399586s; animation-duration: 2.47799s;"></div><div class="star" style="width: 3.99308px; height: 3.99308px; top: 95.15%; left: 98.3987%; animation-delay: 1.66646s; animation-duration: 2.38895s;"></div><div class="star" style="width: 2.65636px; height: 2.65636px; top: 50.4847%; left: 18.5466%; animation-delay: 1.54453s; animation-duration: 4.50664s;"></div><div class="star" style="width: 1.70477px; height: 1.70477px; top: 23.3861%; left: 37.0132%; animation-delay: 2.67011s; animation-duration: 4.3274s;"></div><div class="star" style="width: 2.67633px; height: 2.67633px; top: 54.5582%; left: 99.5659%; animation-delay: 1.20641s; animation-duration: 2.1617s;"></div><div class="star" style="width: 2.0899px; height: 2.0899px; top: 22.0585%; left: 62.5985%; animation-delay: 2.91529s; animation-duration: 4.5649s;"></div><div class="star" style="width: 3.89949px; height: 3.89949px; top: 39.3996%; left: 6.89781%; animation-delay: 2.5027s; animation-duration: 2.18724s;"></div><div class="star" style="width: 1.98422px; height: 1.98422px; top: 43.188%; left: 63.6227%; animation-delay: 0.234628s; animation-duration: 3.79523s;"></div><div class="star" style="width: 1.17127px; height: 1.17127px; top: 84.9035%; left: 19.7781%; animation-delay: 2.66702s; animation-duration: 3.09184s;"></div><div class="star" style="width: 3.58389px; height: 3.58389px; top: 93.4581%; left: 21.9557%; animation-delay: 0.667806s; animation-duration: 2.86806s;"></div><div class="star" style="width: 2.39178px; height: 2.39178px; top: 96.5301%; left: 38.53%; animation-delay: 1.3726s; animation-duration: 2.97009s;"></div><div class="star" style="width: 2.12532px; height: 2.12532px; top: 75.9947%; left: 38.5681%; animation-delay: 1.25216s; animation-duration: 2.33623s;"></div><div class="star" style="width: 3.97102px; height: 3.97102px; top: 12.719%; left: 3.42324%; animation-delay: 2.43203s; animation-duration: 2.88942s;"></div><div class="star" style="width: 3.72874px; height: 3.72874px; top: 77.1368%; left: 34.0219%; animation-delay: 0.835062s; animation-duration: 2.65784s;"></div><div class="star" style="width: 1.9418px; height: 1.9418px; top: 12.6508%; left: 48.4255%; animation-delay: 0.594854s; animation-duration: 3.94435s;"></div><div class="star" style="width: 3.1994px; height: 3.1994px; top: 88.7026%; left: 9.21777%; animation-delay: 0.443927s; animation-duration: 3.53425s;"></div><div class="star" style="width: 2.30211px; height: 2.30211px; top: 26.0215%; left: 11.8509%; animation-delay: 1.01371s; animation-duration: 4.90612s;"></div><div class="star" style="width: 2.77961px; height: 2.77961px; top: 82.602%; left: 36.9526%; animation-delay: 1.23688s; animation-duration: 4.98502s;"></div><div class="star" style="width: 3.6615px; height: 3.6615px; top: 84.8447%; left: 43.8451%; animation-delay: 0.26786s; animation-duration: 3.98952s;"></div><div class="star" style="width: 1.61183px; height: 1.61183px; top: 92.7082%; left: 51.0977%; animation-delay: 2.72136s; animation-duration: 3.20461s;"></div><div class="star" style="width: 1.42857px; height: 1.42857px; top: 57.8223%; left: 16.5023%; animation-delay: 0.442764s; animation-duration: 3.8503s;"></div><div class="star" style="width: 1.18922px; height: 1.18922px; top: 8.5051%; left: 69.796%; animation-delay: 2.63167s; animation-duration: 3.97031s;"></div><div class="star" style="width: 3.45303px; height: 3.45303px; top: 54.801%; left: 4.18184%; animation-delay: 0.324806s; animation-duration: 4.63798s;"></div><div class="star" style="width: 3.2157px; height: 3.2157px; top: 97.4594%; left: 23.6285%; animation-delay: 0.0381373s; animation-duration: 2.12018s;"></div></div>
       <svg class="leaf-left" width="90" height="140" viewBox="0 0 90 140">
-        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"/>
-        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"/>
-        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
-        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"/>
+        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"></ellipse>
+        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"></ellipse>
+        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"></path>
+        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"></ellipse>
       </svg>
       <svg class="leaf-right" width="90" height="140" viewBox="0 0 90 140">
-        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"/>
-        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"/>
-        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
-        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"/>
+        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"></ellipse>
+        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"></ellipse>
+        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"></path>
+        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"></ellipse>
       </svg>
       <div class="banner-title"><span id="yearMonthText">2026年6月</span><span class="ark-gold"> ARK上海 </span>活动行事历</div>
       <div class="banner-subtitle" id="bannerSubtitle">June ACTIVITY CALENDAR</div>
       <div class="gold-divider"><span>◆ ◆ ◆</span></div>
     </div>
 
+    <!-- ★ 统计数据 -->
     <div class="stats-bar">
-      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">本月活动总数（场）</div></div>
-      <div class="stat-card"><div class="stat-num" id="statPeople">0</div><div class="stat-label">可覆盖客户总数（人）</div></div>
-      <div class="stat-card"><div class="stat-num" id="statGroup">0</div><div class="stat-label">集团/其他BU活动（场）</div></div>
-      <div class="stat-card"><div class="stat-num" id="statRegion">0</div><div class="stat-label">区域举办活动（场）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statTotal">15</div><div class="stat-label">本月活动总数（场）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPeople">226</div><div class="stat-label">可覆盖客户总数（人）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statGroup">4</div><div class="stat-label">集团/其他BU活动（场）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statRegion">1</div><div class="stat-label">区域举办活动（场）</div></div>
+    </div>
+
+    <!-- ★ 活动类型说明紧跟统计栏下方 -->
+    <div class="legend-section">
+      <div class="legend-section-title">▸ 活 动 类 型 说 明 ◂</div>
+      <div class="legend-items">
+        <div class="legend-item"><span class="legend-dot" style="background:#4A7C59"></span><span>集团/其他BU活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#D4784A"></span><span>区域举办活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3D5A80"></span><span>一中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#6B4E8A"></span><span>三中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C4708A"></span><span>四中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#5B8FA8"></span><span>五中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#B5494F"></span><span>直属中心活动</span></div>
+      </div>
     </div>
 
     <div class="cal-toolbar" id="calToolbar">
@@ -301,29 +319,18 @@ body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;b
         <div class="week-cell">三</div><div class="week-cell">四</div>
         <div class="week-cell">五</div><div class="week-cell weekend">六</div>
       </div>
-      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-grid" id="calGrid"><div class="cal-day weekend other-month"><div class="day-num-row"><span class="day-num">31</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">1</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">2</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">3</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">4</span></div><span class="event-tag" style="background: rgb(196, 112, 138);">全球合规新趋势下的家庭财富保障与传承（长沙）</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">5</span></div><span class="event-tag" style="background: rgb(61, 90, 128);">在变局中守护确定性（上海）</span><span class="event-tag" style="background: rgb(74, 124, 89);">东京雅叙 · 诺亚 Olive Japan 闭门私享会</span></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">6</span></div></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">7</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">8</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">9</span></div><span class="event-tag" style="background: rgb(196, 112, 138);">财经下午茶活动（重庆）</span><span class="event-tag" style="background: rgb(107, 78, 138);">客户存续沟通会·家宴（上海）</span></div><div class="cal-day today"><div class="day-num-row"><span class="day-num">10</span></div><span class="event-tag" style="background: rgb(196, 112, 138);">N+读书会—道德经里的财富智慧（郑州）</span><span class="event-tag" style="background: rgb(107, 78, 138);">客户家宴活动（上海）</span><span class="event-tag" style="background: rgb(74, 124, 89);">正行骑士汇|马术私享体验</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">11</span></div><span class="event-tag" style="background: rgb(196, 112, 138);">智能时代与 AI 共进（郑州）</span><span class="event-tag" style="background: rgb(196, 112, 138);">端午家宴活动（长沙）</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">12</span></div><span class="event-tag" style="background: rgb(196, 112, 138);">端午家宴活动（长沙）</span><span class="event-tag" style="background: rgb(196, 112, 138);">观自在行有度---佛法视角下的财富智慧与人生修行（郑州）</span><span class="event-tag" style="background: rgb(91, 143, 168);">万象城女性彩妆体验活动（昆明）</span></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">13</span></div></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">14</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">15</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">16</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">【走进狮城-ARK新加坡】特别加场</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">17</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">【走进狮城-ARK新加坡】特别加场</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">18</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">【走进狮城-ARK新加坡】特别加场</span></div><div class="cal-day is-holiday"><div class="holiday-corner holiday"></div><div class="day-num-row"><span class="day-num">19</span><span class="holiday-tag holiday">休 端午</span></div></div><div class="cal-day weekend is-holiday"><div class="holiday-corner holiday"></div><div class="day-num-row"><span class="day-num">20</span><span class="holiday-tag holiday">休 端午</span></div></div><div class="cal-day weekend is-holiday"><div class="holiday-corner holiday"></div><div class="day-num-row"><span class="day-num">21</span><span class="holiday-tag holiday">休 端午</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">22</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">23</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">24</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">25</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">全球财富视野.香港站</span></div><div class="cal-day"><div class="day-num-row"><span class="day-num">26</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">全球财富视野.香港站</span><span class="event-tag" style="background: rgb(212, 120, 74);">6月香港签约团</span></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">27</span></div><span class="event-tag" style="background: rgb(74, 124, 89);">全球财富视野.香港站</span></div><div class="cal-day weekend"><div class="day-num-row"><span class="day-num">28</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">29</span></div></div><div class="cal-day"><div class="day-num-row"><span class="day-num">30</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">1</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">2</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">3</span></div></div><div class="cal-day weekend other-month"><div class="day-num-row"><span class="day-num">4</span></div></div><div class="cal-day weekend other-month"><div class="day-num-row"><span class="day-num">5</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">6</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">7</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">8</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">9</span></div></div><div class="cal-day other-month"><div class="day-num-row"><span class="day-num">10</span></div></div><div class="cal-day weekend other-month"><div class="day-num-row"><span class="day-num">11</span></div></div></div>
     </div>
 
     <div class="footer-divider"><span>◆</span></div>
     <div class="footer-brand">NOAH · ARK WEALTH</div>
-    <div class="legend-section">
-      <div class="legend-section-title">▸ 活 动 类 型 说 明 ◂</div>
-      <div class="legend-items">
-        <div class="legend-item"><span class="legend-dot" style="background:#4A7C59"></span><span>集团/其他BU活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#D4784A"></span><span>区域举办活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#3D5A80"></span><span>一中心活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#6B4E8A"></span><span>三中心活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#C4708A"></span><span>四中心活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#5B8FA8"></span><span>五中心活动</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#B5494F"></span><span>直属中心活动</span></div>
-      </div>
-    </div>
     <div class="footer-note">ⓘ 活动行事历仅供参考，可点击活动名称查看详细。<br>节假日以国务院正式公告为准。</div>
   </div>
 </div>
 
 <script>
 var STORAGE_KEY='ark_calendar_v3';
+var IS_READONLY=false;
 var HOLIDAYS={'2026-01-01':{label:'元旦',type:'holiday',desc:'2026元旦第1天'},'2026-01-02':{label:'元旦',type:'holiday',desc:'2026元旦第2天'},'2026-01-03':{label:'元旦',type:'holiday',desc:'2026元旦第3天'},'2026-01-17':{label:'春节',type:'holiday',desc:'2026春节除夕'},'2026-01-18':{label:'春节',type:'holiday',desc:'2026春节第1天'},'2026-01-19':{label:'春节',type:'holiday',desc:'2026春节第2天'},'2026-01-20':{label:'春节',type:'holiday',desc:'2026春节第3天'},'2026-01-21':{label:'春节',type:'holiday',desc:'2026春节第4天'},'2026-01-22':{label:'春节',type:'holiday',desc:'2026春节第5天'},'2026-01-23':{label:'春节',type:'holiday',desc:'2026春节第6天'},'2026-01-24':{label:'春节',type:'holiday',desc:'2026春节第7天'},'2026-04-04':{label:'清明',type:'holiday',desc:'2026清明第1天'},'2026-04-05':{label:'清明',type:'holiday',desc:'2026清明第2天'},'2026-04-06':{label:'清明',type:'holiday',desc:'2026清明第3天'},'2026-05-01':{label:'劳动节',type:'holiday',desc:'2026劳动节第1天'},'2026-05-02':{label:'劳动节',type:'holiday',desc:'2026劳动节第2天'},'2026-05-03':{label:'劳动节',type:'holiday',desc:'2026劳动节第3天'},'2026-05-04':{label:'劳动节',type:'holiday',desc:'2026劳动节第4天'},'2026-05-05':{label:'劳动节',type:'holiday',desc:'2026劳动节第5天'},'2026-06-19':{label:'端午',type:'holiday',desc:'2026端午第1天'},'2026-06-20':{label:'端午',type:'holiday',desc:'2026端午第2天'},'2026-06-21':{label:'端午',type:'holiday',desc:'2026端午第3天'},'2026-10-01':{label:'国庆',type:'holiday',desc:'2026国庆第1天'},'2026-10-02':{label:'国庆',type:'holiday',desc:'2026国庆第2天'},'2026-10-03':{label:'国庆',type:'holiday',desc:'2026国庆第3天'},'2026-10-04':{label:'国庆',type:'holiday',desc:'2026国庆第4天'},'2026-10-05':{label:'国庆',type:'holiday',desc:'2026国庆第5天'},'2026-10-06':{label:'国庆',type:'holiday',desc:'2026国庆第6天'},'2026-10-07':{label:'中秋',type:'holiday',desc:'2026中秋节'},'2026-10-08':{label:'国庆',type:'holiday',desc:'2026国庆第8天'}};
 var COLOR_MAP={'#4A7C59':'集团/其他BU活动','#D4784A':'区域举办活动','#3D5A80':'一中心活动','#6B4E8A':'三中心活动','#C4708A':'四中心活动','#5B8FA8':'五中心活动','#B5494F':'直属中心活动'};
 var COLORS=Object.keys(COLOR_MAP);
@@ -331,26 +338,10 @@ var MONTH_EN=['January','February','March','April','May','June','July','August',
 var HOLIDAY_TYPE_LABEL={holiday:'🔴 法定节假日',transfer:'🟠 调休补班日',workday:'🟢 补充工作日'};
 var STATUS_CFG={open:{label:'已开放报名',cls:'s-open'},soon:{label:'筹备中',cls:'s-soon'},ended:{label:'已结束',cls:'s-ended'}};
 
-/* ★ EXPORT_ANCHOR_START */
 var currentYear=2026;
 var currentMonth=5;
-var activities=[
-{"id":2,"name":"四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承","shortName":"全球合规新趋势下的家庭财富保障与传承（长沙）","startDate":"2026-06-04","endDate":"2026-06-04","location":"湖南 · 长沙","people":10,"color":"#C4708A","wisdomId":"100981","desc":"","status":"ended","poster":""},
-{"id":3,"name":"【一中心】在变局中守护确定性","shortName":"在变局中守护确定性（上海）","startDate":"2026-06-05","endDate":"2026-06-05","location":"上海 · NWC","people":15,"color":"#3D5A80","wisdomId":"100918","desc":"","status":"ended","poster":""},
-{"id":4,"name":"四中心三部（重庆） 财经下午茶活动","shortName":"财经下午茶活动（重庆）","startDate":"2026-06-09","endDate":"2026-06-09","location":"重庆","people":10,"color":"#C4708A","wisdomId":"101058","desc":"","status":"open","poster":""},
-{"id":5,"name":"【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】","shortName":"N+读书会—道德经里的财富智慧（郑州）","startDate":"2026-06-10","endDate":"2026-06-10","location":"河南 · 郑州","people":10,"color":"#C4708A","wisdomId":"101196","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8810%E6%97%A5%E8%AF%BB%E4%B9%A6%E4%BC%9A(1).jpg"},
-{"id":7,"name":"6月10日上海ark三中心二部-客户家宴活动","shortName":"客户家宴活动（上海）","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海","people":6,"color":"#6B4E8A","wisdomId":"101248","desc":"","status":"open","poster":""},
-{"id":8,"name":"【上海ARK四中心一部（郑州）智能时代与 AI 共进】","shortName":"智能时代与 AI 共进（郑州）","startDate":"2026-06-11","endDate":"2026-06-11","location":"河南 · 郑州","people":15,"color":"#C4708A","wisdomId":"101250","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8811%E6%97%A5%E6%99%BA%E8%83%BD%E6%97%B6%E4%BB%A3%E4%B8%8EAI%E5%85%B1%E8%BF%9B.jpg"},
-{"id":9,"name":"四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行","shortName":"观自在行有度---佛法视角下的财富智慧与人生修行（郑州）","startDate":"2026-06-12","endDate":"2026-06-12","location":"河南 · 郑州","people":20,"color":"#C4708A","wisdomId":"101222","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8812%E6%97%A5%E7%A4%BC%E4%BD%9B.jpg"},
-{"id":10,"name":"2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】","shortName":"万象城女性彩妆体验活动（昆明）","startDate":"2026-06-12","endDate":"2026-06-12","location":"云南 · 昆明","people":15,"color":"#5B8FA8","wisdomId":"101241","desc":"","status":"open","poster":""},
-{"id":13,"name":"6月香港签约团","shortName":"6月香港签约团","startDate":"2026-06-26","endDate":"2026-06-26","location":"中国 · 香港","people":10,"color":"#D4784A","wisdomId":"101098","desc":"","status":"open","poster":""},
-{"id":17,"name":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","shortName":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","startDate":"2026-06-05","endDate":"2026-06-05","location":"日本 · 东京","people":30,"color":"#4A7C59","wisdomId":"101049","desc":"【东京雅叙 · 诺亚 Olive Japan 闭门私享会】\n把家、把生活、把下一代，安放在东京之后——接下来的问题，是与谁同行。\n立足日本，投资全球。6月5日（周五）午后，东京，将在日华人家族请到一起：\n[跳跳]诺亚控股董事长原力，携手三井住友、吉宝等特邀合作伙伴，谈在日布局、全球资产配置、税务与跨境传承——以及财富之外，我们到底想留给下一代什么。\n一个穿越周期的原力视角，一份关于全球华人财富往哪去的真实判断。","status":"ended","poster":""},
-{"id":18,"name":"正行骑士汇|马术私享体验","shortName":"正行骑士汇|马术私享体验","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海 · 蟠龙天地","people":10,"color":"#4A7C59","wisdomId":"线下报名","desc":"","status":"ended","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_%E6%AD%A3%E8%A1%8C%E9%AA%91%E5%A3%AB%E6%B1%87%E9%A9%AC%E6%9C%AF%E7%A7%81%E4%BA%AB%E4%BD%93%E9%AA%8C.jpg"},
-{"id":19,"name":"【走进狮城-ARK新加坡】特别加场","shortName":"【走进狮城-ARK新加坡】特别加场","startDate":"2026-06-16","endDate":"2026-06-18","location":"新加坡","people":25,"color":"#4A7C59","wisdomId":"101146","desc":"【6.16-18日走进新加坡】\n一座花园之城,读懂全球华人的财富未来。\n\n新加坡,是全球资本与华人家族共同选择的坐标。6月16日-18日三天,我们带您走进狮城的肌理: 从清晨街巷的书话漫步,到 AI与资本市场的最前沿:从建国企业的长期主义,到一蔬一饭的人间烟火。\n\n走进 Noah Ark 新加坡,谈穿越周期的判断,与同行者一起,把\"立足新加坡、配置全球\"从一句话,变成可触可感的路径。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8816%E6%97%A5%E6%96%B0%E5%8A%A0%E5%9D%A1.jpg"},
-{"id":20,"name":"全球财富视野.香港站","shortName":"全球财富视野.香港站","startDate":"2026-06-25","endDate":"2026-06-27","location":"中国 · 香港","people":20,"color":"#4A7C59","wisdomId":"101098","desc":"三天议程 · 四大维度\n全球视野 · 洞见当下\n聚焦出海香港的时代命题，特邀香港科技青年联合会副秘书长现场分享，带您读懂香港作为全球化枢纽的真实底色。\nAI赋能 · 服务升级\nAI如何重塑顾问与客户之间的陪伴方式——从需求识别到长期规划，让每一步财富决策都有更智慧的支撑。\n出海参访 · 现场连接\n走进香港科技青年会出海企业交流现场，与同频的企业主、二代接班人面对面——这不只是一次参访，更是一次有质量的同路人相遇。\n龙舟观赛 · 同舟收官\n亲临永明香港国际龙舟邀请赛，在维港水岸感受这座城市最鲜活的一面。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8825%E6%97%A5%E9%A6%99%E6%B8%AF%E7%AB%99.jpg"}
-];
-var nextId=21;
-/* ★ EXPORT_ANCHOR_END */
+var activities=[{"id":2,"name":"四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承","shortName":"全球合规新趋势下的家庭财富保障与传承（长沙）","startDate":"2026-06-04","endDate":"2026-06-04","location":"湖南 · 长沙","people":10,"color":"#C4708A","wisdomId":"100981","desc":"","status":"ended","poster":""},{"id":3,"name":"【一中心】在变局中守护确定性","shortName":"在变局中守护确定性（上海）","startDate":"2026-06-05","endDate":"2026-06-05","location":"上海 · NWC","people":15,"color":"#3D5A80","wisdomId":"100918","desc":"","status":"ended","poster":""},{"id":4,"name":"四中心三部（重庆） 财经下午茶活动","shortName":"财经下午茶活动（重庆）","startDate":"2026-06-09","endDate":"2026-06-09","location":"重庆","people":10,"color":"#C4708A","wisdomId":"101058","desc":"","status":"open","poster":""},{"id":21,"name":"客户存续沟通会·家宴（上海）","shortName":"客户存续沟通会·家宴（上海）","startDate":"2026-06-09","endDate":"2026-06-09","location":"上海","people":15,"color":"#6B4E8A","wisdomId":"","desc":"","status":"open","poster":""},{"id":5,"name":"【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】","shortName":"N+读书会—道德经里的财富智慧（郑州）","startDate":"2026-06-10","endDate":"2026-06-10","location":"河南 · 郑州","people":10,"color":"#C4708A","wisdomId":"101196","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8810%E6%97%A5%E8%AF%BB%E4%B9%A6%E4%BC%9A(1).jpg"},{"id":7,"name":"6月10日上海ark三中心二部-客户家宴活动","shortName":"客户家宴活动（上海）","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海","people":6,"color":"#6B4E8A","wisdomId":"101248","desc":"","status":"open","poster":""},{"id":18,"name":"正行骑士汇|马术私享体验","shortName":"正行骑士汇|马术私享体验","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海 · 蟠龙天地","people":10,"color":"#4A7C59","wisdomId":"线下报名","desc":"","status":"ended","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_%E6%AD%A3%E8%A1%8C%E9%AA%91%E5%A3%AB%E6%B1%87%E9%A9%AC%E6%9C%AF%E7%A7%81%E4%BA%AB%E4%BD%93%E9%AA%8C.jpg"},{"id":8,"name":"【上海ARK四中心一部（郑州）智能时代与 AI 共进】","shortName":"智能时代与 AI 共进（郑州）","startDate":"2026-06-11","endDate":"2026-06-11","location":"河南 · 郑州","people":15,"color":"#C4708A","wisdomId":"101250","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8811%E6%97%A5%E6%99%BA%E8%83%BD%E6%97%B6%E4%BB%A3%E4%B8%8EAI%E5%85%B1%E8%BF%9B.jpg"},{"id":22,"name":"端午家宴活动（长沙）","shortName":"端午家宴活动（长沙）","startDate":"2026-06-11","endDate":"2026-06-12","location":"湖南 · 长沙","people":15,"color":"#C4708A","wisdomId":"101264","desc":"","status":"open","poster":""},{"id":9,"name":"四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行","shortName":"观自在行有度---佛法视角下的财富智慧与人生修行（郑州）","startDate":"2026-06-12","endDate":"2026-06-12","location":"河南 · 郑州","people":20,"color":"#C4708A","wisdomId":"101222","desc":"","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8812%E6%97%A5%E7%A4%BC%E4%BD%9B.jpg"},{"id":10,"name":"2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】","shortName":"万象城女性彩妆体验活动（昆明）","startDate":"2026-06-12","endDate":"2026-06-12","location":"云南 · 昆明","people":15,"color":"#5B8FA8","wisdomId":"101241","desc":"","status":"open","poster":""},{"id":19,"name":"【走进狮城-ARK新加坡】特别加场","shortName":"【走进狮城-ARK新加坡】特别加场","startDate":"2026-06-16","endDate":"2026-06-18","location":"新加坡","people":25,"color":"#4A7C59","wisdomId":"101146","desc":"【6.16-18日走进新加坡】\n一座花园之城,读懂全球华人的财富未来。\n\n新加坡,是全球资本与华人家族共同选择的坐标。6月16日-18日三天,我们带您走进狮城的肌理: 从清晨街巷的书话漫步,到 AI与资本市场的最前沿:从建国企业的长期主义,到一蔬一饭的人间烟火。\n\n走进 Noah Ark 新加坡,谈穿越周期的判断,与同行者一起,把\"立足新加坡、配置全球\"从一句话,变成可触可感的路径。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8816%E6%97%A5%E6%96%B0%E5%8A%A0%E5%9D%A1.jpg"},{"id":20,"name":"全球财富视野.香港站","shortName":"全球财富视野.香港站","startDate":"2026-06-25","endDate":"2026-06-27","location":"中国 · 香港","people":20,"color":"#4A7C59","wisdomId":"101098","desc":"三天议程 · 四大维度\n全球视野 · 洞见当下\n聚焦出海香港的时代命题，特邀香港科技青年联合会副秘书长现场分享，带您读懂香港作为全球化枢纽的真实底色。\nAI赋能 · 服务升级\nAI如何重塑顾问与客户之间的陪伴方式——从需求识别到长期规划，让每一步财富决策都有更智慧的支撑。\n出海参访 · 现场连接\n走进香港科技青年会出海企业交流现场，与同频的企业主、二代接班人面对面——这不只是一次参访，更是一次有质量的同路人相遇。\n龙舟观赛 · 同舟收官\n亲临永明香港国际龙舟邀请赛，在维港水岸感受这座城市最鲜活的一面。","status":"open","poster":"https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/invite_6%E6%9C%8825%E6%97%A5%E9%A6%99%E6%B8%AF%E7%AB%99.jpg"},{"id":13,"name":"6月香港签约团","shortName":"6月香港签约团","startDate":"2026-06-26","endDate":"2026-06-26","location":"中国 · 香港","people":10,"color":"#D4784A","wisdomId":"101098","desc":"","status":"open","poster":""},{"id":17,"name":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","shortName":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","startDate":"2026-06-05","endDate":"2026-06-05","location":"日本 · 东京","people":30,"color":"#4A7C59","wisdomId":"101049","desc":"【东京雅叙 · 诺亚 Olive Japan 闭门私享会】\n把家、把生活、把下一代，安放在东京之后——接下来的问题，是与谁同行。\n立足日本，投资全球。6月5日（周五）午后，东京，将在日华人家族请到一起：\n[跳跳]诺亚控股董事长原力，携手三井住友、吉宝等特邀合作伙伴，谈在日布局、全球资产配置、税务与跨境传承——以及财富之外，我们到底想留给下一代什么。\n一个穿越周期的原力视角，一份关于全球华人财富往哪去的真实判断。","status":"ended","poster":""}];
+var nextId=23;
 var isPresentMode=true;
 
 function saveToStorage(){
@@ -535,22 +526,26 @@ function openPosterModal(id){
       +'<img src="'+act.poster+'" alt="活动邀请函"/>'
       +'<div class="poster-hint">📱 微信中长按图片→保存到相册<br>💻 电脑端右键图片→另存为</div>'
       +'<a href="'+act.poster+'" download="'+escH(act.name)+'_邀请函.jpg" class="poster-download-btn">⬇ 下载高清邀请函</a>'
-      +'<button class="poster-replace-btn" onclick="replacePoster('+id+')">🔄 重新上传图片</button>'
+      +(IS_READONLY?'':'<button class="poster-replace-btn" onclick="replacePoster('+id+')">🔄 重新上传图片</button>')
       +'</div>';
   }else{
-    html='<div style="margin-bottom:12px">'
-      +'<div class="upload-zone">'
-      +'<input type="file" accept="image/*" onchange="handleUpload(this,'+id+')"/>'
-      +'<div class="upload-zone-icon">📁</div>'
-      +'<div class="upload-zone-text">点击上传邀请函图片</div>'
-      +'<div class="upload-zone-sub">支持 JPG / PNG · 建议上传高清原图</div>'
-      +'</div></div>'
-      +'<div style="text-align:center;color:#bbb;font-size:11px;margin:8px 0">— 或者粘贴图片链接 —</div>'
-      +'<div style="display:flex;gap:6px;margin-top:4px">'
-      +'<input id="posterLinkInput_'+id+'" class="form-input" placeholder="粘贴 GitHub raw 图片链接" style="flex:1;font-size:11px"/>'
-      +'<button onclick="applyPosterLink('+id+')" style="background:#c5a864;color:#fff;border:none;border-radius:6px;padding:0 10px;font-size:12px;cursor:pointer;white-space:nowrap">确认</button>'
-      +'</div>'
-      +'<div class="poster-link-hint">格式：https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/文件名.jpg</div>';
+    if(IS_READONLY){
+      html='<div style="text-align:center;padding:30px 0;color:#bbb;font-size:13px">暂无邀请函</div>';
+    }else{
+      html='<div style="margin-bottom:12px">'
+        +'<div class="upload-zone">'
+        +'<input type="file" accept="image/*" onchange="handleUpload(this,'+id+')"/>'
+        +'<div class="upload-zone-icon">📁</div>'
+        +'<div class="upload-zone-text">点击上传邀请函图片</div>'
+        +'<div class="upload-zone-sub">支持 JPG / PNG · 建议上传高清原图</div>'
+        +'</div></div>'
+        +'<div style="text-align:center;color:#bbb;font-size:11px;margin:8px 0">— 或者粘贴图片链接 —</div>'
+        +'<div style="display:flex;gap:6px;margin-top:4px">'
+        +'<input id="posterLinkInput_'+id+'" class="form-input" placeholder="粘贴 GitHub raw 图片链接" style="flex:1;font-size:11px"/>'
+        +'<button onclick="applyPosterLink('+id+')" style="background:#c5a864;color:#fff;border:none;border-radius:6px;padding:0 10px;font-size:12px;cursor:pointer;white-space:nowrap">确认</button>'
+        +'</div>'
+        +'<div class="poster-link-hint">格式：https://raw.githubusercontent.com/leiqi917/Event-Calendar-Board/main/文件名.jpg</div>';
+    }
   }
   document.getElementById('posterModalInner').innerHTML=html;
   openModal('posterModal');
@@ -744,14 +739,20 @@ function changeMonth(d){
   if(currentMonth<0){currentMonth=11;currentYear--;}
   renderCalendar();
 }
-function buildExportHTML(){
+function buildExportHTML(readonly){
   var snap='var currentYear='+currentYear+';\nvar currentMonth='+currentMonth+';\nvar activities='+JSON.stringify(activities)+';\nvar nextId='+nextId+';';
   var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
   html=html.replace(/\/\* ★ EXPORT_ANCHOR_START \*\/[\s\S]*?\/\* ★ EXPORT_ANCHOR_END \*\//,snap);
+  if(readonly){
+    /* ★ 只读模式：隐藏编辑面板和操作按钮，同时标记IS_READONLY=true */
+    var hideCSS='<style id="xhs">#editPanel,#togglePresentBtn,#calToolbar,.btn-add-activity,.save-bar,.activity-list,.panel-header,.holiday-legend{display:none!important}.main-content{flex:1!important}</style>';
+    html=html.replace('</head>',hideCSS+'\n</head>');
+    html=html.replace('var IS_READONLY=false;','var IS_READONLY=true;');
+  }
   return html;
 }
 function exportEditable(){
-  var html=buildExportHTML();
+  var html=buildExportHTML(false);
   var blob=new Blob([html],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
@@ -759,9 +760,7 @@ function exportEditable(){
   a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);
 }
 function exportReadonly(){
-  var html=buildExportHTML();
-  var hideCSS='<style id="xhs">#editPanel,#togglePresentBtn,#calToolbar,.btn-add-activity,.save-bar,.activity-list,.panel-header,.holiday-legend{display:none!important}.main-content{flex:1!important}</style>';
-  html=html.replace('</head>',hideCSS+'\n</head>');
+  var html=buildExportHTML(true);
   var blob=new Blob([html],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
@@ -779,4 +778,5 @@ document.addEventListener('DOMContentLoaded',function(){
   renderActivityList();
 });
 </script>
+
 </body></html>
