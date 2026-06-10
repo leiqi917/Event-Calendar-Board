@@ -1,783 +1,790 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARK上海 6月行事历</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ARK上海 活动行事历</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f5f5; color: #333; }
-  
-  .header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: white;
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .header-left { display: flex; align-items: center; gap: 15px; }
-  .header-logo { font-size: 28px; font-weight: 800; letter-spacing: 2px; color: #e8d5a3; }
-  .header-title { font-size: 16px; color: #ccc; }
-  .header-month { font-size: 36px; font-weight: 700; color: #e8d5a3; }
-
-  .stats-bar {
-    background: white;
-    padding: 12px 30px;
-    display: flex;
-    gap: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    flex-wrap: wrap;
-  }
-  .stat-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-  .stat-num { font-weight: 700; font-size: 20px; color: #1a1a2e; }
-  .stat-label { color: #666; }
-
-  .legend {
-    background: white;
-    padding: 10px 30px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #eee;
-    align-items: center;
-  }
-  .legend-title { font-size: 13px; color: #666; font-weight: 600; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
-  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-
-  .calendar-wrap { padding: 20px 30px; }
-  .calendar-grid {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background: #1a1a2e;
-  }
-  .weekday {
-    text-align: center;
-    padding: 12px;
-    color: #e8d5a3;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background: #e8e8e8;
-  }
-  .day-cell {
-    background: white;
-    min-height: 110px;
-    padding: 8px;
-    position: relative;
-  }
-  .day-cell.other-month { background: #fafafa; }
-  .day-cell.today { background: #fffbf0; }
-  .day-num {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .day-num.sunday { color: #e74c3c; }
-  .day-num.saturday { color: #e74c3c; }
-  .day-num span.today-badge {
-    background: #e8d5a3;
-    color: #1a1a2e;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-  }
-  .other-month .day-num { color: #ccc; }
-
-  .activity-tag {
-    display: block;
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-size: 11px;
-    margin-bottom: 3px;
-    cursor: pointer;
-    line-height: 1.4;
-    word-break: break-all;
-    transition: opacity 0.2s;
-    color: white;
-    font-weight: 500;
-  }
-  .activity-tag:hover { opacity: 0.85; }
-
-  /* 颜色变量 - 可编辑 */
-  .color-group { background: #2ecc71; }      /* 集团/BU活动 - 绿色 */
-  .color-region-sh { background: #e67e22; }  /* 上海区域 - 橙色 */
-  .color-region-cq { background: #e67e22; }  /* 重庆区域 - 橙色 */
-  .color-region-zz { background: #e67e22; }  /* 郑州区域 - 橙色 */
-  .color-region-cs { background: #e67e22; }  /* 长沙区域 - 橙色 */
-  .color-region-km { background: #e67e22; }  /* 昆明区域 - 橙色 */
-  .color-overseas { background: #9b59b6; }   /* 海外（新加坡/香港/东京）- 紫色 */
-
-  /* 弹窗 */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    width: 90%;
-    max-width: 520px;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-  .modal-close {
-    position: absolute;
-    top: 15px; right: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-    background: none;
-    border: none;
-  }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-right: 30px; color: #1a1a2e; }
-  .modal-field { margin-bottom: 12px; }
-  .modal-field label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
-  .modal-field input, .modal-field textarea, .modal-field select {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-  }
-  .modal-field textarea { height: 80px; resize: vertical; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-  .btn {
-    padding: 8px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .btn-primary { background: #1a1a2e; color: white; }
-  .btn-primary:hover { background: #0f3460; }
-  .btn-danger { background: #e74c3c; color: white; }
-  .btn-secondary { background: #eee; color: #333; }
-
-  .toolbar {
-    padding: 10px 30px;
-    background: white;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .toolbar-btn {
-    padding: 7px 16px;
-    border-radius: 8px;
-    border: 1.5px solid #1a1a2e;
-    background: white;
-    color: #1a1a2e;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .toolbar-btn:hover { background: #1a1a2e; color: white; }
-  .toolbar-btn.primary { background: #1a1a2e; color: white; }
-  .toolbar-btn.primary:hover { background: #0f3460; }
-
-  .add-activity-form {
-    display: none;
-    background: white;
-    margin: 0 30px 10px;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
-  .add-activity-form.active { display: block; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-field label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
-  .form-field input, .form-field select, .form-field textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-  }
-  .form-field.full { grid-column: 1 / -1; }
-
-  @media (max-width: 768px) {
-    .calendar-wrap { padding: 10px; }
-    .day-cell { min-height: 80px; padding: 5px; }
-    .activity-tag { font-size: 10px; padding: 2px 4px; }
-    .header { padding: 15px; }
-    .stats-bar { padding: 10px 15px; gap: 15px; }
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:#f5f7f2;color:#2c2c2c;min-height:100vh}
+.page-border{position:fixed;top:8px;left:8px;right:8px;bottom:8px;border:1.5px solid rgba(197,168,100,.45);pointer-events:none;z-index:9999;border-radius:4px}
+.page-border::before,.page-border::after{content:'◆';position:absolute;color:rgba(197,168,100,.6);font-size:10px}
+.page-border::before{top:-7px;left:50%;transform:translateX(-50%)}
+.page-border::after{bottom:-7px;left:50%;transform:translateX(-50%)}
+#togglePresentBtn{position:fixed;top:18px;right:24px;z-index:10000;background:linear-gradient(135deg,#c5a864,#e8d5a3);color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(197,168,100,.4);letter-spacing:1px;font-weight:600;transition:all .3s}
+#togglePresentBtn:hover{box-shadow:0 4px 14px rgba(197,168,100,.6)}
+.app-layout{display:flex;min-height:100vh;transition:all .35s}
+.edit-panel{width:300px;min-width:300px;background:rgba(255,255,255,.92);border-right:1.5px solid rgba(197,168,100,.3);display:flex;flex-direction:column;transition:all .35s;overflow:hidden;box-shadow:2px 0 16px rgba(197,168,100,.1)}
+.present-mode .edit-panel{width:0;min-width:0;opacity:0;pointer-events:none}
+.panel-header{padding:18px 16px 12px;background:linear-gradient(135deg,rgba(74,124,89,.08),rgba(197,168,100,.08));border-bottom:1px solid rgba(197,168,100,.2);font-size:14px;font-weight:700;color:#4a7c59;letter-spacing:1px}
+.holiday-legend{margin:8px 14px 0;padding:8px 10px;background:rgba(245,247,242,.8);border:1px solid rgba(197,168,100,.2);border-radius:7px;font-size:11px;color:#666}
+.holiday-legend-title{font-weight:700;color:#4a7c59;margin-bottom:5px;font-size:11px}
+.legend-row{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.legend-tag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700}
+.legend-tag.holiday{background:rgba(181,73,79,.15);color:#b5494f}
+.legend-tag.transfer{background:rgba(212,120,74,.15);color:#d4784a}
+.legend-tag.workday{background:rgba(74,124,89,.15);color:#4a7c59}
+.btn-add-activity{margin:10px 14px;background:linear-gradient(135deg,#4a7c59,#5a9c6e);color:#fff;border:none;border-radius:8px;padding:9px 0;width:calc(100% - 28px);font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.btn-add-activity:hover{background:linear-gradient(135deg,#3d6b4d,#4a7c59);box-shadow:0 3px 10px rgba(74,124,89,.3)}
+.save-bar{display:flex;align-items:center;justify-content:space-between;padding:4px 14px 0;gap:8px}
+#saveTip{font-size:10px;color:#4a7c59;opacity:0;transition:opacity .4s;flex:1;letter-spacing:.5px}
+.btn-clear-storage{background:rgba(181,73,79,.1);color:#b5494f;border:1px solid rgba(181,73,79,.25);border-radius:5px;font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;letter-spacing:.5px}
+.activity-list{flex:1;overflow-y:auto;padding:0 10px 16px}
+.activity-list::-webkit-scrollbar{width:4px}
+.activity-list::-webkit-scrollbar-thumb{background:rgba(197,168,100,.3);border-radius:2px}
+.activity-item{background:rgba(255,255,255,.8);border:1px solid rgba(197,168,100,.2);border-radius:8px;margin-bottom:8px;overflow:hidden;transition:box-shadow .2s}
+.activity-item:hover{box-shadow:0 3px 12px rgba(197,168,100,.2)}
+.activity-item-header{display:flex;align-items:center;padding:8px 10px;gap:8px}
+.color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.item-name{flex:1;font-size:12px;font-weight:600;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-date{font-size:11px;color:#888}
+.item-actions{display:flex;gap:4px}
+.btn-edit,.btn-del{border:none;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer;transition:all .2s}
+.btn-edit{background:rgba(74,124,89,.12);color:#4a7c59}
+.btn-edit:hover{background:rgba(74,124,89,.25)}
+.btn-del{background:rgba(181,73,79,.1);color:#b5494f}
+.btn-del:hover{background:rgba(181,73,79,.22)}
+.edit-form{padding:0 10px 10px;border-top:1px solid rgba(197,168,100,.15);background:rgba(245,247,242,.6);display:none}
+.edit-form.open{display:block}
+.form-row{margin-top:8px}
+.form-label{font-size:11px;color:#666;margin-bottom:3px;display:block}
+.form-input{width:100%;padding:5px 8px;border:1px solid rgba(197,168,100,.3);border-radius:5px;font-size:12px;background:#fff;outline:none;transition:border .2s;font-family:inherit}
+.form-input:focus{border-color:#c5a864}
+.count-control{display:flex;align-items:center;gap:6px}
+.count-control input{width:60px;text-align:center}
+.btn-count{width:24px;height:24px;border:1px solid rgba(197,168,100,.4);background:#fff;border-radius:4px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#c5a864;font-weight:700}
+.color-picker-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.color-chip{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.color-chip.selected{border-color:#c5a864;transform:scale(1.25)}
+.form-save-btn{margin-top:10px;width:100%;background:linear-gradient(135deg,#c5a864,#e8d5a3);color:#fff;border:none;border-radius:6px;padding:7px 0;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:1px}
+.form-save-btn:hover{box-shadow:0 2px 8px rgba(197,168,100,.4)}
+.status-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:middle}
+.status-tag .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.status-tag.s-open{background:#e8f5e9;color:#2e7d32}
+.status-tag.s-open .sdot{background:#2e7d32}
+.status-tag.s-soon{background:#fff8e1;color:#e65100}
+.status-tag.s-soon .sdot{background:#e65100}
+.status-tag.s-ended{background:#f3f3f3;color:#999}
+.status-tag.s-ended .sdot{background:#999}
+.main-content{flex:1;overflow-y:auto;padding:0 0 40px;background:linear-gradient(160deg,#f8faf5 0%,#faf8f0 100%)}
+.banner{position:relative;overflow:hidden;padding:38px 40px 28px;background:linear-gradient(160deg,#e8f0e4 0%,#f5f0e4 60%,#faf8f0 100%);text-align:center}
+.banner-halo{position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(197,168,100,.18) 0%,transparent 70%);pointer-events:none}
+.stars{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+.star{position:absolute;background:rgba(197,168,100,.55);border-radius:50%;animation:twinkle 3s infinite alternate}
+@keyframes twinkle{0%{opacity:.3;transform:scale(1)}100%{opacity:1;transform:scale(1.4)}}
+.leaf-left,.leaf-right{position:absolute;top:10px;opacity:.38;pointer-events:none}
+.leaf-left{left:12px}
+.leaf-right{right:12px;transform:scaleX(-1)}
+.banner-title{position:relative;z-index:2;font-size:30px;font-weight:700;color:#2e4a35;letter-spacing:3px;line-height:1.3}
+.banner-title .ark-gold{font-style:italic;color:#c5a864;font-family:Georgia,'Times New Roman',serif}
+.banner-subtitle{position:relative;z-index:2;font-size:13px;letter-spacing:6px;color:#8a9e80;margin-top:6px;font-family:Georgia,serif}
+.gold-divider{display:flex;align-items:center;margin:16px 40px 0;position:relative;z-index:2}
+.gold-divider::before,.gold-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c5a864,transparent)}
+.gold-divider span{color:#c5a864;font-size:10px;margin:0 8px;letter-spacing:2px}
+.stats-bar{display:flex;gap:16px;padding:18px 32px;position:relative;align-items:stretch}
+.stat-card{flex:1;text-align:center;background:rgba(255,255,255,.62);border:1px solid rgba(197,168,100,.35);border-radius:10px;padding:14px 10px;backdrop-filter:blur(6px);transition:box-shadow .2s}
+.stat-card:hover{box-shadow:0 4px 16px rgba(197,168,100,.2)}
+.stat-num{font-size:30px;font-weight:700;color:#c5a864;line-height:1.1;font-family:Georgia,serif}
+.stat-label{font-size:11px;color:#7a8a70;margin-top:4px;letter-spacing:1px}
+.cal-toolbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.month-nav{display:flex;align-items:center;gap:14px;padding:14px 0 8px}
+.month-nav button{background:none;border:1.5px solid rgba(197,168,100,.4);color:#c5a864;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.month-nav button:hover{background:rgba(197,168,100,.12)}
+.month-nav-label{font-size:14px;font-weight:600;color:#4a7c59;letter-spacing:1px}
+.calendar-wrap{padding:0 24px;position:relative}
+.month-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:260px;font-weight:900;color:rgba(197,168,100,.055);pointer-events:none;z-index:0;font-family:Georgia,serif;user-select:none;line-height:1}
+.week-header{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
+.week-cell{text-align:center;padding:8px 4px;font-size:12px;font-weight:600;color:#7a8a70;letter-spacing:1px}
+.week-cell.weekend{color:#c5a864}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;position:relative;z-index:1}
+.cal-day{min-height:96px;background:rgba(255,255,255,.75);border:1px solid rgba(197,168,100,.15);border-radius:6px;padding:4px 5px;position:relative;overflow:hidden;transition:box-shadow .2s}
+.cal-day:hover{box-shadow:0 2px 10px rgba(197,168,100,.2)}
+.cal-day.weekend{background:rgba(250,245,235,.85)}
+.cal-day.other-month{opacity:.35}
+.cal-day.today{border:1.5px solid rgba(197,168,100,.6);background:rgba(197,168,100,.07)}
+.cal-day.is-holiday{background:linear-gradient(145deg,rgba(181,73,79,.07) 0%,rgba(255,246,246,.92) 100%);border-color:rgba(181,73,79,.22)}
+.cal-day.is-transfer{background:linear-gradient(145deg,rgba(212,120,74,.07) 0%,rgba(255,249,243,.92) 100%);border-color:rgba(212,120,74,.2)}
+.cal-day.is-workday{background:linear-gradient(145deg,rgba(74,124,89,.07) 0%,rgba(245,251,245,.92) 100%);border-color:rgba(74,124,89,.2)}
+.day-num-row{display:flex;align-items:center;gap:3px;flex-wrap:wrap;min-height:20px}
+.day-num{font-size:13px;font-weight:600;color:#3a4a3a;line-height:1.4}
+.cal-day.weekend .day-num{color:#c5a864}
+.cal-day.is-holiday .day-num{color:#b5494f}
+.holiday-tag{display:inline-flex;align-items:center;font-size:9px;padding:1px 5px;border-radius:10px;font-weight:700;letter-spacing:.3px;line-height:1.4;white-space:nowrap}
+.holiday-tag.holiday{background:linear-gradient(135deg,rgba(181,73,79,.18),rgba(181,73,79,.1));color:#b5494f;border:1px solid rgba(181,73,79,.25)}
+.holiday-tag.transfer{background:linear-gradient(135deg,rgba(212,120,74,.18),rgba(212,120,74,.1));color:#d4784a;border:1px solid rgba(212,120,74,.25)}
+.holiday-tag.workday{background:linear-gradient(135deg,rgba(74,124,89,.18),rgba(74,124,89,.1));color:#4a7c59;border:1px solid rgba(74,124,89,.25)}
+.holiday-corner{position:absolute;top:0;right:0;width:0;height:0;border-style:solid}
+.holiday-corner.holiday{border-width:0 16px 16px 0;border-color:transparent rgba(181,73,79,.38) transparent transparent}
+.holiday-corner.transfer{border-width:0 14px 14px 0;border-color:transparent rgba(212,120,74,.35) transparent transparent}
+.holiday-corner.workday{border-width:0 14px 14px 0;border-color:transparent rgba(74,124,89,.32) transparent transparent}
+.event-tag{display:block;margin-top:2px;padding:2px 5px;border-radius:4px;font-size:10px;font-weight:600;color:#fff;cursor:pointer;line-height:1.4;white-space:pre-line;transition:opacity .15s,box-shadow .15s;position:relative;z-index:2}
+.event-tag:hover{opacity:.85;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.footer-divider{display:flex;align-items:center;margin:24px 32px 0}
+.footer-divider::before,.footer-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c5a864,transparent)}
+.footer-divider span{color:#c5a864;font-size:10px;margin:0 6px}
+.footer-brand{text-align:center;padding:12px 0 8px;font-size:13px;letter-spacing:4px;color:#c5a864;font-family:Georgia,serif;font-weight:600}
+.legend-section{margin:4px 32px 12px;padding:12px 20px;background:rgba(255,255,255,.55);border:1px solid rgba(197,168,100,.25);border-radius:10px;backdrop-filter:blur(4px)}
+.legend-section-title{font-size:10px;font-weight:700;color:#a09060;letter-spacing:2.5px;margin-bottom:10px;text-align:center;font-family:Georgia,serif}
+.legend-items{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;align-items:center}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#5a6a50;letter-spacing:.3px;white-space:nowrap}
+.legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.footer-note{text-align:center;font-size:11px;color:#aaa;padding:0 24px 24px;line-height:1.8;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:20000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-box{background:#fff;border-radius:14px;padding:28px 28px 22px;max-width:480px;width:90%;box-shadow:0 12px 48px rgba(0,0,0,.22);max-height:85vh;overflow-y:auto;position:relative;border-top:3px solid #c5a864}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;color:#aaa;cursor:pointer}
+.modal-close:hover{color:#666}
+.modal-title{font-size:16px;font-weight:700;color:#2e4a35;margin-bottom:8px}
+.modal-holiday-info{margin-bottom:12px;padding:8px 12px;background:linear-gradient(135deg,rgba(197,168,100,.08),rgba(245,240,225,.6));border-radius:8px;border-left:3px solid #c5a864;font-size:12px;color:#7a6030}
+.modal-event-block{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(197,168,100,.18)}
+.modal-event-block:last-child{border-bottom:none;margin-bottom:0}
+.modal-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;color:#fff;margin-bottom:6px}
+.modal-meta{font-size:13px;color:#555;line-height:2}
+.modal-meta strong{color:#333}
+.wisdom-id-row{display:flex;align-items:center;gap:6px;margin-top:6px;padding:5px 10px;background:linear-gradient(135deg,rgba(197,168,100,.1),rgba(245,240,225,.5));border-radius:6px;border:1px solid rgba(197,168,100,.25)}
+.wisdom-id-label{font-size:11px;font-weight:700;color:#c5a864;letter-spacing:1px;white-space:nowrap}
+.wisdom-id-value{font-size:12px;color:#5a4a2a;font-family:'Courier New',monospace;letter-spacing:1px;font-weight:600}
+.wisdom-id-empty{font-size:11px;color:#bbb;font-style:italic}
+.activity-pick-item{display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:8px;background:#f9f9f9;border:1px solid rgba(197,168,100,.2);border-radius:10px;cursor:pointer;transition:.2s}
+.activity-pick-item:hover{background:rgba(197,168,100,.08);border-color:rgba(197,168,100,.4)}
+.activity-pick-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.activity-pick-name{flex:1;font-size:13px;font-weight:600;color:#333}
+.activity-pick-loc{font-size:11px;color:#888;margin-top:2px}
+.activity-pick-arrow{color:#c5a864;font-size:16px}
+.modal-action-row{display:flex;gap:10px;margin-top:14px}
+.btn-action-invite{flex:1;padding:10px 0;background:linear-gradient(135deg,#c5a864,#e8d5a3);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.btn-action-invite:hover{box-shadow:0 4px 12px rgba(197,168,100,.5)}
+.btn-action-intro{flex:1;padding:10px 0;background:linear-gradient(135deg,#4a7c59,#5a9c6e);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.btn-action-intro:hover{box-shadow:0 4px 12px rgba(74,124,89,.4)}
+.poster-modal-inner{text-align:center}
+.poster-modal-inner img{width:100%;border-radius:10px;display:block;margin-bottom:12px}
+.poster-hint{font-size:12px;color:#c5a864;padding:10px 12px;background:#fffbf2;border-radius:8px;margin-bottom:10px;line-height:1.9}
+.poster-download-btn{display:block;width:100%;padding:11px 0;background:linear-gradient(135deg,#1a1a2e,#2e4a35);color:#c5a864;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1px;text-decoration:none;text-align:center;margin-bottom:8px}
+.poster-replace-btn{width:100%;padding:9px;background:#f5f5f5;color:#666;border:none;border-radius:10px;font-size:12px;cursor:pointer;margin-top:4px}
+.upload-zone{border:2px dashed rgba(197,168,100,.45);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;position:relative;background:rgba(255,251,242,.7);transition:.2s}
+.upload-zone:hover{border-color:#c5a864;background:#fffbf2}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone-icon{font-size:28px;margin-bottom:6px}
+.upload-zone-text{font-size:13px;color:#c5a864;font-weight:600;margin-bottom:3px}
+.upload-zone-sub{font-size:11px;color:#bbb}
+.intro-header{background:linear-gradient(135deg,#1a1a2e,#2e4a35);border-radius:10px;padding:20px;margin-bottom:16px;text-align:center}
+.intro-badge{display:inline-block;background:rgba(197,168,100,.2);color:#c5a864;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;border:1px solid rgba(197,168,100,.3);margin-bottom:8px;letter-spacing:1px}
+.intro-title{font-size:17px;font-weight:700;color:#fff;letter-spacing:2px;line-height:1.4}
+.intro-subtitle{font-size:11px;color:rgba(197,168,100,.8);margin-top:4px;letter-spacing:2px}
+.intro-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.intro-info-card{background:rgba(245,247,242,.9);border:1px solid rgba(197,168,100,.2);border-radius:8px;padding:10px 12px}
+.intro-info-icon{font-size:15px;margin-bottom:3px}
+.intro-info-label{font-size:10px;color:#aaa;letter-spacing:.8px;margin-bottom:3px}
+.intro-info-value{font-size:12px;color:#333;font-weight:600;line-height:1.5}
+.intro-desc-box{background:linear-gradient(135deg,rgba(197,168,100,.06),rgba(74,124,89,.04));border:1px solid rgba(197,168,100,.2);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.intro-desc-label{font-size:10px;font-weight:700;color:#c5a864;letter-spacing:2px;margin-bottom:8px}
+.intro-desc-text{font-size:13px;color:#555;line-height:1.9;white-space:pre-wrap}
+.intro-no-desc{font-size:13px;color:#bbb;font-style:italic;text-align:center;padding:8px 0}
+.intro-status-row{display:flex;align-items:center;justify-content:center;padding:10px;background:rgba(255,255,255,.8);border-radius:8px;border:1px solid rgba(197,168,100,.15)}
+.export-btn-group{display:flex;gap:8px}
+.export-btn-readonly{background:linear-gradient(135deg,#3d5a80,#5b8fa8);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.5px;box-shadow:0 2px 8px rgba(61,90,128,.3);transition:all .2s;white-space:nowrap}
+.export-btn-readonly:hover{box-shadow:0 4px 14px rgba(61,90,128,.45)}
+.export-btn-editable{background:linear-gradient(135deg,#4a7c59,#5a9c6e);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.5px;box-shadow:0 2px 8px rgba(74,124,89,.3);transition:all .2s;white-space:nowrap}
+.export-btn-editable:hover{box-shadow:0 4px 14px rgba(74,124,89,.4)}
+.add-modal-title{font-size:15px;font-weight:700;color:#2e4a35;margin-bottom:14px}
+.confirm-btns{display:flex;gap:10px;margin-top:16px}
+.confirm-btns button{flex:1;padding:8px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}
+.confirm-yes{background:#b5494f;color:#fff}
+.confirm-no{background:#eee;color:#555}
 </style>
 </head>
 <body>
+<div class="page-border"></div>
+<button id="togglePresentBtn" onclick="togglePresent()">🖥 演示模式</button>
 
-<div class="header">
-  <div class="header-left">
-    <div class="header-logo">ARK</div>
-    <div>
-      <div class="header-title">诺亚财富 · 上海行事历</div>
-      <div style="font-size:12px;color:#aaa;">可编辑版 · 2026年6月</div>
-    </div>
-  </div>
-  <div class="header-month">2026年6月</div>
-</div>
-
-<div class="stats-bar">
-  <div class="stat-item">
-    <div class="stat-num" id="totalCount">0</div>
-    <div class="stat-label">本月活动总场数</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num" id="totalPeople">0</div>
-    <div class="stat-label">可覆盖客户总数</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num" id="cityCount">0</div>
-    <div class="stat-label">覆盖城市</div>
+<div class="modal-overlay" id="inviteModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('inviteModal')">✕</button>
+    <div id="inviteModalContent"></div>
   </div>
 </div>
-
-<div class="legend">
-  <span class="legend-title">颜色说明：</span>
-  <span class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>集团/BU活动</span>
-  <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>区域活动</span>
-  <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>海外活动</span>
-</div>
-
-<div class="toolbar">
-  <button class="toolbar-btn primary" onclick="toggleAddForm()">＋ 新增活动</button>
-  <button class="toolbar-btn" onclick="exportHTML()">导出可上传版本</button>
-  <button class="toolbar-btn" onclick="clearAll()">清空所有活动</button>
-</div>
-
-<div class="add-activity-form" id="addForm">
-  <div style="font-weight:700;font-size:15px;margin-bottom:14px;">新增活动</div>
-  <div class="form-grid">
-    <div class="form-field">
-      <label>活动名称 *</label>
-      <input type="text" id="f-title" placeholder="请输入活动名称">
-    </div>
-    <div class="form-field">
-      <label>日期 *（如：6）</label>
-      <input type="number" id="f-day" placeholder="日期" min="1" max="30">
-    </div>
-    <div class="form-field">
-      <label>地点</label>
-      <input type="text" id="f-location" placeholder="如：上海">
-    </div>
-    <div class="form-field">
-      <label>可覆盖人数</label>
-      <input type="number" id="f-people" placeholder="0" value="0">
-    </div>
-    <div class="form-field">
-      <label>活动类型/颜色</label>
-      <select id="f-color">
-        <option value="color-group">集团/BU活动（绿色）</option>
-        <option value="color-region-sh">上海区域（橙色）</option>
-        <option value="color-region-cq">重庆区域（橙色）</option>
-        <option value="color-region-zz">郑州区域（橙色）</option>
-        <option value="color-region-cs">长沙区域（橙色）</option>
-        <option value="color-region-km">昆明区域（橙色）</option>
-        <option value="color-overseas">海外活动（紫色）</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label>智慧ID（选填）</label>
-      <input type="text" id="f-wisdomid" placeholder="留空可后填">
-    </div>
-    <div class="form-field full">
-      <label>活动简介（选填）</label>
-      <textarea id="f-desc" placeholder="留空可后填"></textarea>
-    </div>
+<div class="modal-overlay" id="posterModal">
+  <div class="modal-box" style="max-width:400px">
+    <button class="modal-close" onclick="closeModal('posterModal')">✕</button>
+    <div style="font-size:15px;font-weight:700;color:#2e4a35;margin-bottom:14px">🖼 活动邀请函</div>
+    <div id="posterModalInner"></div>
   </div>
-  <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end;">
-    <button class="btn btn-secondary" onclick="toggleAddForm()">取消</button>
-    <button class="btn btn-primary" onclick="addActivity()">确认添加</button>
+</div>
+<div class="modal-overlay" id="introModal">
+  <div class="modal-box" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('introModal')">✕</button>
+    <div id="introModalInner"></div>
+  </div>
+</div>
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box" style="max-width:360px">
+    <button class="modal-close" onclick="closeModal('addModal')">✕</button>
+    <div class="add-modal-title">➕ 新增活动</div>
+    <div id="addFormContainer" data-edit-id=""></div>
+  </div>
+</div>
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:320px">
+    <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    <div style="font-size:15px;font-weight:700;color:#b5494f;margin-bottom:8px">🗑️ 确认删除</div>
+    <div style="font-size:13px;color:#555">确定要删除该活动吗？此操作不可撤销。</div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" id="confirmYesBtn">确认删除</button>
+      <button class="confirm-no" onclick="closeModal('confirmModal')">取消</button>
+    </div>
   </div>
 </div>
 
-<div class="calendar-wrap">
-  <div class="calendar-grid">
-    <div class="weekdays">
-      <div class="weekday">日</div>
-      <div class="weekday">一</div>
-      <div class="weekday">二</div>
-      <div class="weekday">三</div>
-      <div class="weekday">四</div>
-      <div class="weekday">五</div>
-      <div class="weekday">六</div>
+<div class="app-layout present-mode" id="appLayout">
+  <div class="edit-panel" id="editPanel">
+    <div class="panel-header">📋 活动管理</div>
+    <div class="holiday-legend">
+      <div class="holiday-legend-title">📅 节假日图例</div>
+      <div class="legend-row"><span class="legend-tag holiday">休</span><span>法定节假日</span></div>
+      <div class="legend-row"><span class="legend-tag transfer">班</span><span>调休补班日</span></div>
+      <div class="legend-row"><span class="legend-tag workday">补</span><span>补充工作日</span></div>
+      <div style="margin-top:5px;font-size:10px;color:#aaa;line-height:1.5">* 依据国务院正式公告<br>* 点击日期格查看详情</div>
     </div>
-    <div class="days-grid" id="daysGrid"></div>
+    <button class="btn-add-activity" onclick="openAddModal()">＋ 新增活动</button>
+    <div class="save-bar">
+      <span id="saveTip"></span>
+      <button class="btn-clear-storage" onclick="clearStorage()">🗑 清除存档</button>
+    </div>
+    <div class="activity-list" id="activityList"></div>
   </div>
-</div>
 
-<!-- 编辑弹窗 -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="modal-title" id="modalTitle"></div>
-    <div class="modal-field">
-      <label>活动名称</label>
-      <input type="text" id="m-title">
+  <div class="main-content" id="mainContent">
+    <div class="banner">
+      <div class="banner-halo"></div>
+      <div class="stars" id="starsContainer"></div>
+      <svg class="leaf-left" width="90" height="140" viewBox="0 0 90 140">
+        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"/>
+        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"/>
+        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
+        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"/>
+      </svg>
+      <svg class="leaf-right" width="90" height="140" viewBox="0 0 90 140">
+        <ellipse cx="30" cy="80" rx="22" ry="60" fill="rgba(74,124,89,0.55)" transform="rotate(-20 30 80)"/>
+        <ellipse cx="28" cy="82" rx="10" ry="40" fill="rgba(74,124,89,0.3)" transform="rotate(-22 28 82)"/>
+        <path d="M30 130 C32 110 28 90 30 30" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
+        <ellipse cx="60" cy="60" rx="14" ry="40" fill="rgba(94,154,109,0.42)" transform="rotate(15 60 60)"/>
+      </svg>
+      <div class="banner-title"><span id="yearMonthText">2026年6月</span><span class="ark-gold"> ARK上海 </span>活动行事历</div>
+      <div class="banner-subtitle" id="bannerSubtitle">June ACTIVITY CALENDAR</div>
+      <div class="gold-divider"><span>◆ ◆ ◆</span></div>
     </div>
-    <div class="modal-field">
-      <label>日期</label>
-      <input type="number" id="m-day" min="1" max="30">
+
+    <div class="stats-bar">
+      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">本月活动总数（场）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPeople">0</div><div class="stat-label">可覆盖客户总数（人）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statGroup">0</div><div class="stat-label">集团/其他BU活动（场）</div></div>
+      <div class="stat-card"><div class="stat-num" id="statRegion">0</div><div class="stat-label">区域举办活动（场）</div></div>
     </div>
-    <div class="modal-field">
-      <label>地点</label>
-      <input type="text" id="m-location">
+
+    <div class="cal-toolbar" id="calToolbar">
+      <div class="month-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <span class="month-nav-label" id="monthNavLabel">2026年6月</span>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="export-btn-group">
+        <button class="export-btn-editable" onclick="exportEditable()">📤 导出可编辑版</button>
+        <button class="export-btn-readonly" onclick="exportReadonly()">⬇ 导出只读版</button>
+      </div>
     </div>
-    <div class="modal-field">
-      <label>可覆盖人数</label>
-      <input type="number" id="m-people">
+
+    <div class="calendar-wrap">
+      <div class="month-watermark" id="monthWatermark">6</div>
+      <div class="week-header">
+        <div class="week-cell weekend">日</div>
+        <div class="week-cell">一</div><div class="week-cell">二</div>
+        <div class="week-cell">三</div><div class="week-cell">四</div>
+        <div class="week-cell">五</div><div class="week-cell weekend">六</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
     </div>
-    <div class="modal-field">
-      <label>活动类型/颜色</label>
-      <select id="m-color">
-        <option value="color-group">集团/BU活动（绿色）</option>
-        <option value="color-region-sh">上海区域（橙色）</option>
-        <option value="color-region-cq">重庆区域（橙色）</option>
-        <option value="color-region-zz">郑州区域（橙色）</option>
-        <option value="color-region-cs">长沙区域（橙色）</option>
-        <option value="color-region-km">昆明区域（橙色）</option>
-        <option value="color-overseas">海外活动（紫色）</option>
-      </select>
+
+    <div class="footer-divider"><span>◆</span></div>
+    <div class="footer-brand">NOAH · ARK WEALTH</div>
+    <div class="legend-section">
+      <div class="legend-section-title">▸ 活 动 类 型 说 明 ◂</div>
+      <div class="legend-items">
+        <div class="legend-item"><span class="legend-dot" style="background:#4A7C59"></span><span>集团/其他BU活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#D4784A"></span><span>区域举办活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3D5A80"></span><span>一中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#6B4E8A"></span><span>三中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C4708A"></span><span>四中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#5B8FA8"></span><span>五中心活动</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#B5494F"></span><span>直属中心活动</span></div>
+      </div>
     </div>
-    <div class="modal-field">
-      <label>智慧ID（选填）</label>
-      <input type="text" id="m-wisdomid">
-    </div>
-    <div class="modal-field">
-      <label>活动简介（选填）</label>
-      <textarea id="m-desc"></textarea>
-    </div>
-    <div class="modal-field">
-      <label>报名状态（选填）</label>
-      <select id="m-status">
-        <option value="">未设置</option>
-        <option value="报名中">报名中</option>
-        <option value="已截止">已截止</option>
-        <option value="已结束">已结束</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">取消</button>
-      <button class="btn btn-danger" onclick="deleteActivity()">删除</button>
-      <button class="btn btn-primary" onclick="saveActivity()">保存</button>
-    </div>
+    <div class="footer-note">ⓘ 活动行事历仅供参考，可点击活动名称查看详细。<br>节假日以国务院正式公告为准。</div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// 核心数据 - 硬编码，不依赖 LocalStorage
-// ============================================================
-var activities = [
-  {
-    id: 1,
-    title: "全球合规新趋势下的家庭财富保障与传承",
-    day: 4,
-    location: "长沙",
-    people: 0,
-    color: "color-region-cs",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 2,
-    title: "在变局中守护确定性",
-    day: 5,
-    location: "上海",
-    people: 0,
-    color: "color-region-sh",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 3,
-    title: "东京雅叙·诺亚Olive Japan闭门私享会",
-    day: 5,
-    location: "东京",
-    people: 0,
-    color: "color-overseas",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 4,
-    title: "财经下午茶活动",
-    day: 9,
-    location: "重庆",
-    people: 0,
-    color: "color-region-cq",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 5,
-    title: "N+读书会—道德经里的财富智慧",
-    day: 10,
-    location: "郑州",
-    people: 0,
-    color: "color-region-zz",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 6,
-    title: "客户家宴活动",
-    day: 10,
-    location: "上海",
-    people: 0,
-    color: "color-region-sh",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 7,
-    title: "正行骑士汇｜马术私享体验",
-    day: 10,
-    location: "上海",
-    people: 0,
-    color: "color-group",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 8,
-    title: "智能时代与AI共进",
-    day: 11,
-    location: "郑州",
-    people: 0,
-    color: "color-region-zz",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 9,
-    title: "观自在行有度—佛法视角下的财富智慧与人生修行",
-    day: 12,
-    location: "郑州",
-    people: 0,
-    color: "color-region-zz",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 10,
-    title: "万象城女性彩妆体验活动",
-    day: 12,
-    location: "昆明",
-    people: 0,
-    color: "color-region-km",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 11,
-    title: "【走进狮城·ARK新加坡】特别加场",
-    day: 16,
-    dayEnd: 18,
-    location: "新加坡",
-    people: 0,
-    color: "color-overseas",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 12,
-    title: "全球财富视野·香港站",
-    day: 25,
-    dayEnd: 27,
-    location: "香港",
-    people: 0,
-    color: "color-overseas",
-    wisdomId: "",
-    desc: "",
-    status: ""
-  },
-  {
-    id: 13,
-    title: "6月香港签约团",
-    day: 26,
-    location: "香港",
-    people: 0,
-    color: "color-overseas",
-    wisdomId: "",
-    desc: "",
-    status: ""
+var STORAGE_KEY='ark_calendar_v3';
+var HOLIDAYS={'2026-01-01':{label:'元旦',type:'holiday',desc:'2026元旦第1天'},'2026-01-02':{label:'元旦',type:'holiday',desc:'2026元旦第2天'},'2026-01-03':{label:'元旦',type:'holiday',desc:'2026元旦第3天'},'2026-01-17':{label:'春节',type:'holiday',desc:'2026春节除夕'},'2026-01-18':{label:'春节',type:'holiday',desc:'2026春节第1天'},'2026-01-19':{label:'春节',type:'holiday',desc:'2026春节第2天'},'2026-01-20':{label:'春节',type:'holiday',desc:'2026春节第3天'},'2026-01-21':{label:'春节',type:'holiday',desc:'2026春节第4天'},'2026-01-22':{label:'春节',type:'holiday',desc:'2026春节第5天'},'2026-01-23':{label:'春节',type:'holiday',desc:'2026春节第6天'},'2026-01-24':{label:'春节',type:'holiday',desc:'2026春节第7天'},'2026-04-04':{label:'清明',type:'holiday',desc:'2026清明第1天'},'2026-04-05':{label:'清明',type:'holiday',desc:'2026清明第2天'},'2026-04-06':{label:'清明',type:'holiday',desc:'2026清明第3天'},'2026-05-01':{label:'劳动节',type:'holiday',desc:'2026劳动节第1天'},'2026-05-02':{label:'劳动节',type:'holiday',desc:'2026劳动节第2天'},'2026-05-03':{label:'劳动节',type:'holiday',desc:'2026劳动节第3天'},'2026-05-04':{label:'劳动节',type:'holiday',desc:'2026劳动节第4天'},'2026-05-05':{label:'劳动节',type:'holiday',desc:'2026劳动节第5天'},'2026-06-19':{label:'端午',type:'holiday',desc:'2026端午第1天'},'2026-06-20':{label:'端午',type:'holiday',desc:'2026端午第2天'},'2026-06-21':{label:'端午',type:'holiday',desc:'2026端午第3天'},'2026-10-01':{label:'国庆',type:'holiday',desc:'2026国庆第1天'},'2026-10-02':{label:'国庆',type:'holiday',desc:'2026国庆第2天'},'2026-10-03':{label:'国庆',type:'holiday',desc:'2026国庆第3天'},'2026-10-04':{label:'国庆',type:'holiday',desc:'2026国庆第4天'},'2026-10-05':{label:'国庆',type:'holiday',desc:'2026国庆第5天'},'2026-10-06':{label:'国庆',type:'holiday',desc:'2026国庆第6天'},'2026-10-07':{label:'中秋',type:'holiday',desc:'2026中秋节'},'2026-10-08':{label:'国庆',type:'holiday',desc:'2026国庆第8天'}};
+var COLOR_MAP={'#4A7C59':'集团/其他BU活动','#D4784A':'区域举办活动','#3D5A80':'一中心活动','#6B4E8A':'三中心活动','#C4708A':'四中心活动','#5B8FA8':'五中心活动','#B5494F':'直属中心活动'};
+var COLORS=Object.keys(COLOR_MAP);
+var MONTH_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var HOLIDAY_TYPE_LABEL={holiday:'🔴 法定节假日',transfer:'🟠 调休补班日',workday:'🟢 补充工作日'};
+var STATUS_CFG={open:{label:'已开放报名',cls:'s-open'},soon:{label:'筹备中',cls:'s-soon'},ended:{label:'已结束',cls:'s-ended'}};
+
+/* ★ EXPORT_ANCHOR_START */
+var currentYear=2026;
+var currentMonth=5;
+var activities=[{"id":2,"name":"四中心二部（长沙）全球合规新趋势下的家庭财富保障与传承","shortName":"全球合规新趋势下的家庭财富保障与传承（长沙）","startDate":"2026-06-04","endDate":"2026-06-04","location":"湖南 · 长沙","people":10,"color":"#C4708A","wisdomId":"100981","desc":"","status":"ended","poster":""},{"id":3,"name":"【一中心】在变局中守护确定性","shortName":"在变局中守护确定性（上海）","startDate":"2026-06-05","endDate":"2026-06-05","location":"上海 · NWC","people":15,"color":"#3D5A80","wisdomId":"100918","desc":"","status":"ended","poster":""},{"id":4,"name":"四中心三部（重庆） 财经下午茶活动","shortName":"财经下午茶活动（重庆）","startDate":"2026-06-09","endDate":"2026-06-09","location":"重庆","people":10,"color":"#C4708A","wisdomId":"101058","desc":"","status":"open","poster":""},{"id":5,"name":"【五大圈层 上海Office四中心一部（郑州）N+读书会—道德经里的财富智慧】","shortName":"N+读书会—道德经里的财富智慧（郑州）","startDate":"2026-06-10","endDate":"2026-06-10","location":"河南 · 郑州","people":10,"color":"#C4708A","wisdomId":"101196","desc":"","status":"open","poster":""},{"id":7,"name":"6月10日上海ark三中心二部-客户家宴活动","shortName":"客户家宴活动（上海）","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海","people":6,"color":"#6B4E8A","wisdomId":"101248","desc":"","status":"open","poster":""},{"id":8,"name":"【上海ARK四中心一部（郑州）智能时代与 AI 共进】","shortName":"智能时代与 AI 共进（郑州）","startDate":"2026-06-11","endDate":"2026-06-11","location":"河南 · 郑州","people":15,"color":"#C4708A","wisdomId":"101250","desc":"","status":"open","poster":""},{"id":9,"name":"四中心一部（郑州）观自在行有度---佛法视角下的财富智慧与人生修行","shortName":"观自在行有度---佛法视角下的财富智慧与人生修行（郑州）","startDate":"2026-06-12","endDate":"2026-06-12","location":"河南 · 郑州","people":20,"color":"#C4708A","wisdomId":"101222","desc":"","status":"open","poster":""},{"id":10,"name":"2026年6月12日【上海office第五中心二部（昆明）*ZXAI- 万象城女性彩妆体验活动】","shortName":"万象城女性彩妆体验活动（昆明）","startDate":"2026-06-12","endDate":"2026-06-12","location":"云南 · 昆明","people":15,"color":"#5B8FA8","wisdomId":"101241","desc":"","status":"open","poster":""},{"id":13,"name":"6月香港签约团","shortName":"6月香港签约团","startDate":"2026-06-26","endDate":"2026-06-26","location":"中国 · 香港","people":10,"color":"#D4784A","wisdomId":"101098","desc":"","status":"open","poster":""},{"id":17,"name":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","shortName":"东京雅叙 · 诺亚 Olive Japan 闭门私享会","startDate":"2026-06-05","endDate":"2026-06-05","location":"日本 · 东京","people":30,"color":"#4A7C59","wisdomId":"101049","desc":"【东京雅叙 · 诺亚 Olive Japan 闭门私享会】\n把家、把生活、把下一代，安放在东京之后——接下来的问题，是与谁同行。\n立足日本，投资全球。6月5日（周五）午后，东京，将在日华人家族请到一起：\n[跳跳]诺亚控股董事长原力，携手三井住友、吉宝等特邀合作伙伴，谈在日布局、全球资产配置、税务与跨境传承——以及财富之外，我们到底想留给下一代什么。\n一个穿越周期的原力视角，一份关于全球华人财富往哪去的真实判断。","status":"ended","poster":""},{"id":18,"name":"正行骑士汇|马术私享体验","shortName":"正行骑士汇|马术私享体验","startDate":"2026-06-10","endDate":"2026-06-10","location":"上海 · 蟠龙天地","people":10,"color":"#4A7C59","wisdomId":"线下报名","desc":"","status":"ended","poster":""},{"id":19,"name":"【走进狮城-ARK新加坡】特别加场","shortName":"【走进狮城-ARK新加坡】特别加场","startDate":"2026-06-16","endDate":"2026-06-18","location":"新加坡","people":25,"color":"#4A7C59","wisdomId":"101146","desc":"【6.16-18日走进新加坡】\n一座花园之城,读懂全球华人的财富未来。\n\n新加坡,是全球资本与华人家族共同选择的坐标。6月16日-18日三天,我们带您走进狮城的肌理: 从清晨街巷的书话漫步,到 AI与资本市场的最前沿:从建国企业的长期主义,到一蔬一饭的人间烟火。 \n\n走进 Noah Ark 新加坡,谈穿越周期的判断,与同行者一起,把\"立足新加坡、配置全球\"从一句话,变成可触可感的路径。","status":"open","poster":""},{"id":20,"name":"全球财富视野.香港站","shortName":"全球财富视野.香港站","startDate":"2026-06-25","endDate":"2026-06-27","location":"中国 · 香港","people":20,"color":"#4A7C59","wisdomId":"101098","desc":"三天议程 · 四大维度\n全球视野 · 洞见当下\n聚焦出海香港的时代命题，特邀香港科技青年联合会副秘书长现场分享，带您读懂香港作为全球化枢纽的真实底色。\nAI赋能 · 服务升级\nAI如何重塑顾问与客户之间的陪伴方式——从需求识别到长期规划，让每一步财富决策都有更智慧的支撑。\n出海参访 · 现场连接\n走进香港科技青年会出海企业交流现场，与同频的企业主、二代接班人面对面——这不只是一次参访，更是一次有质量的同路人相遇。\n龙舟观赛 · 同舟收官\n亲临永明香港国际龙舟邀请赛，在维港水岸感受这座城市最鲜活的一面。","status":"open","poster":""}];
+var nextId=21;
+/* ★ EXPORT_ANCHOR_END */
+var isPresentMode=true;
+
+/* ---- 存储 ---- */
+function saveToStorage(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({activities:activities,nextId:nextId,year:currentYear,month:currentMonth}));
+    showSaveTip();
+  }catch(e){alert('⚠️ 存储空间不足，建议先导出备份再清理。');}
+}
+
+/* ★ 核心修复：硬编码数据优先，LocalStorage只在有更新时才覆盖 */
+function loadFromStorage(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+    var d=JSON.parse(raw);
+    /* 只有当存储版本的nextId比硬编码大时（说明用户有新增/编辑），才加载存储数据 */
+    if(d.nextId&&d.nextId>nextId){
+      if(d.activities)activities=d.activities;
+      if(d.nextId)nextId=d.nextId;
+      return true;
+    }
+    return false;
+  }catch(e){return false;}
+}
+
+function clearStorage(){
+  if(!confirm('确定要清除所有已保存的活动数据吗？此操作不可撤销。'))return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+function showSaveTip(){
+  var t=document.getElementById('saveTip');if(!t)return;
+  t.style.opacity='1';
+  t.textContent='✅ 已保存 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  clearTimeout(window._stTimer);
+  window._stTimer=setTimeout(function(){t.style.opacity='0';},2500);
+}
+
+/* ---- 工具 ---- */
+function toDS(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+function parseDate(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function fmtCN(s){var d=parseDate(s);return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';}
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function genId(){return nextId++;}
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function makeStatusTag(status){
+  var cfg=STATUS_CFG[status]||STATUS_CFG['soon'];
+  return '<span class="status-tag '+cfg.cls+'"><span class="sdot"></span>'+cfg.label+'</span>';
+}
+
+/* ---- 星屑 ---- */
+function generateStars(){
+  var c=document.getElementById('starsContainer');if(!c)return;c.innerHTML='';
+  for(var i=0;i<36;i++){
+    var s=document.createElement('div');s.className='star';
+    var z=Math.random()*3+1;
+    s.style.cssText='width:'+z+'px;height:'+z+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*3+'s;animation-duration:'+(2+Math.random()*3)+'s;';
+    c.appendChild(s);
   }
-];
+}
 
-var nextId = 14;
-var editingId = null;
-var year = 2026;
-var month = 6; // 6月
-
-// ============================================================
-// 日历渲染
-// ============================================================
-function renderCalendar() {
-  var grid = document.getElementById('daysGrid');
-  grid.innerHTML = '';
-
-  // 2026年6月1日是星期一，getDay()=1
-  var firstDay = new Date(year, month - 1, 1).getDay(); // 0=周日
-  var daysInMonth = new Date(year, month, 0).getDate(); // 30
-  var daysInPrevMonth = new Date(year, month - 1, 0).getDate();
-  var today = new Date();
-
-  // 统计数据
-  var totalPeople = 0;
-  var cities = new Set();
-  activities.forEach(function(a) {
-    totalPeople += (parseInt(a.people) || 0);
-    if (a.location) cities.add(a.location);
-  });
-  document.getElementById('totalCount').textContent = activities.length;
-  document.getElementById('totalPeople').textContent = totalPeople;
-  document.getElementById('cityCount').textContent = cities.size;
-
-  // 总格数（6行×7列=42）
-  var totalCells = 42;
-
-  for (var i = 0; i < totalCells; i++) {
-    var cell = document.createElement('div');
-    cell.className = 'day-cell';
-
-    var dayNum = i - firstDay + 1;
-    var isCurrentMonth = dayNum >= 1 && dayNum <= daysInMonth;
-    var displayDay, displayMonth;
-
-    if (!isCurrentMonth) {
-      cell.classList.add('other-month');
-      if (dayNum < 1) {
-        displayDay = daysInPrevMonth + dayNum;
-      } else {
-        displayDay = dayNum - daysInMonth;
-      }
-    } else {
-      displayDay = dayNum;
+/* ---- 查询某天活动 ---- */
+function getActsForDate(ds){
+  var d=parseDate(ds),res=[];
+  for(var i=0;i<activities.length;i++){
+    var a=activities[i];
+    var s=parseDate(a.startDate),e=parseDate(a.endDate||a.startDate);
+    if(d>=s&&d<=e){
+      var role=s.getTime()===e.getTime()?'single':d.getTime()===s.getTime()?'start':d.getTime()===e.getTime()?'end':'mid';
+      res.push({activity:a,role:role});
     }
+  }
+  return res;
+}
 
-    // 今天高亮
-    var isToday = isCurrentMonth &&
-      today.getFullYear() === year &&
-      today.getMonth() === month - 1 &&
-      today.getDate() === dayNum;
-    if (isToday) cell.classList.add('today');
-
-    // 日期数字
-    var dayNumEl = document.createElement('div');
-    var dow = i % 7;
-    dayNumEl.className = 'day-num' + (dow === 0 ? ' sunday' : '') + (dow === 6 ? ' saturday' : '');
-
-    if (isToday) {
-      dayNumEl.innerHTML = '<span class="today-badge">' + displayDay + '</span>';
-    } else {
-      dayNumEl.textContent = displayDay;
+/* ---- 渲染日历 ---- */
+function renderCalendar(){
+  var y=currentYear,m=currentMonth;
+  document.getElementById('yearMonthText').textContent=y+'年'+(m+1)+'月';
+  document.getElementById('bannerSubtitle').textContent=MONTH_EN[m]+' ACTIVITY CALENDAR';
+  var nl=document.getElementById('monthNavLabel');if(nl)nl.textContent=y+'年'+(m+1)+'月';
+  document.getElementById('monthWatermark').textContent=String(m+1);
+  var fw=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),dip=new Date(y,m,0).getDate();
+  var grid=document.getElementById('calGrid');grid.innerHTML='';
+  var now=new Date(),todayDS=toDS(now.getFullYear(),now.getMonth(),now.getDate());
+  for(var i=0;i<42;i++){
+    var cDay,cY,cM,isCur;
+    if(i<fw){cM=m-1<0?11:m-1;cY=m-1<0?y-1:y;cDay=dip-(fw-1-i);isCur=false;}
+    else if(i>=fw+dim){cM=m+1>11?0:m+1;cY=m+1>11?y+1:y;cDay=i-fw-dim+1;isCur=false;}
+    else{cM=m;cY=y;cDay=i-fw+1;isCur=true;}
+    var ds=toDS(cY,cM,cDay),wd=i%7,isWE=wd===0||wd===6;
+    var hInfo=HOLIDAYS[ds]||null;
+    var cls='cal-day'+(isWE?' weekend':'')+(isCur?'':' other-month')+(isCur&&ds===todayDS?' today':'');
+    if(hInfo)cls+=' is-'+hInfo.type;
+    var cell=document.createElement('div');cell.className=cls;
+    if(hInfo){var corner=document.createElement('div');corner.className='holiday-corner '+hInfo.type;cell.appendChild(corner);}
+    var nr=document.createElement('div');nr.className='day-num-row';
+    var ne=document.createElement('span');ne.className='day-num';ne.textContent=cDay;nr.appendChild(ne);
+    if(hInfo){var ht=document.createElement('span');ht.className='holiday-tag '+hInfo.type;ht.textContent=(hInfo.type==='holiday'?'休':hInfo.type==='transfer'?'班':'补')+' '+hInfo.label;nr.appendChild(ht);}
+    cell.appendChild(nr);
+    var acts=getActsForDate(ds);
+    for(var j=0;j<acts.length;j++){
+      (function(item,cDS){
+        var tag=document.createElement('span');
+        tag.className='event-tag';
+        tag.style.background=item.activity.color;
+        tag.textContent=item.activity.shortName||item.activity.name;
+        tag.onclick=function(ev){
+          ev.stopPropagation();
+          openSingleActivity(item.activity,cDS,HOLIDAYS[cDS]||null);
+        };
+        cell.appendChild(tag);
+      })(acts[j],ds);
     }
-    cell.appendChild(dayNumEl);
-
-    // 渲染活动标签
-    if (isCurrentMonth) {
-      activities.forEach(function(a) {
-        var show = false;
-        if (a.dayEnd) {
-          // 跨天活动：每天都显示
-          if (dayNum >= a.day && dayNum <= a.dayEnd) show = true;
-        } else {
-          if (a.day === dayNum) show = true;
-        }
-
-        if (show) {
-          var tag = document.createElement('span');
-          tag.className = 'activity-tag ' + (a.color || 'color-group');
-
-          var label = a.title;
-          if (a.dayEnd && dayNum === a.day) label = '▶ ' + label;
-          if (a.dayEnd && dayNum === a.dayEnd) label = label + ' ◀';
-          if (a.location) label += '【' + a.location + '】';
-
-          tag.textContent = label;
-          tag.onclick = function(e) {
-            e.stopPropagation();
-            openEditModal(a.id);
-          };
-          cell.appendChild(tag);
-        }
-      });
-    }
-
+    (function(cDS,cH){
+      cell.onclick=function(){
+        var da=getActsForDate(cDS).filter(function(x){return x.role==='start'||x.role==='single';});
+        if(da.length===1){openSingleActivity(da[0].activity,cDS,cH);}
+        else if(da.length>1){openActivityPicker(cDS,cH);}
+        else if(cH){openHolidayOnly(cDS,cH);}
+      };
+    })(ds,hInfo);
     grid.appendChild(cell);
   }
+  updateStats();
 }
 
-// ============================================================
-// 新增活动
-// ============================================================
-function toggleAddForm() {
-  var form = document.getElementById('addForm');
-  form.classList.toggle('active');
-}
-
-function addActivity() {
-  var title = document.getElementById('f-title').value.trim();
-  var day = parseInt(document.getElementById('f-day').value);
-  if (!title || !day) { alert('请填写活动名称和日期'); return; }
-
-  activities.push({
-    id: nextId++,
-    title: title,
-    day: day,
-    location: document.getElementById('f-location').value.trim(),
-    people: parseInt(document.getElementById('f-people').value) || 0,
-    color: document.getElementById('f-color').value,
-    wisdomId: document.getElementById('f-wisdomid').value.trim(),
-    desc: document.getElementById('f-desc').value.trim(),
-    status: ''
-  });
-
-  // 清空表单
-  ['f-title','f-day','f-location','f-wisdomid','f-desc'].forEach(function(id){
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('f-people').value = '0';
-  document.getElementById('addForm').classList.remove('active');
-  renderCalendar();
-}
-
-// ============================================================
-// 编辑弹窗
-// ============================================================
-function openEditModal(id) {
-  var a = activities.find(function(x){ return x.id === id; });
-  if (!a) return;
-  editingId = id;
-  document.getElementById('modalTitle').textContent = '编辑活动';
-  document.getElementById('m-title').value = a.title || '';
-  document.getElementById('m-day').value = a.day || '';
-  document.getElementById('m-location').value = a.location || '';
-  document.getElementById('m-people').value = a.people || 0;
-  document.getElementById('m-color').value = a.color || 'color-group';
-  document.getElementById('m-wisdomid').value = a.wisdomId || '';
-  document.getElementById('m-desc').value = a.desc || '';
-  document.getElementById('m-status').value = a.status || '';
-  document.getElementById('modalOverlay').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-  editingId = null;
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
-
-function saveActivity() {
-  var idx = activities.findIndex(function(x){ return x.id === editingId; });
-  if (idx === -1) return;
-  activities[idx].title = document.getElementById('m-title').value.trim();
-  activities[idx].day = parseInt(document.getElementById('m-day').value);
-  activities[idx].location = document.getElementById('m-location').value.trim();
-  activities[idx].people = parseInt(document.getElementById('m-people').value) || 0;
-  activities[idx].color = document.getElementById('m-color').value;
-  activities[idx].wisdomId = document.getElementById('m-wisdomid').value.trim();
-  activities[idx].desc = document.getElementById('m-desc').value.trim();
-  activities[idx].status = document.getElementById('m-status').value;
-  closeModal();
-  renderCalendar();
-}
-
-function deleteActivity() {
-  if (!confirm('确定删除这场活动？')) return;
-  activities = activities.filter(function(x){ return x.id !== editingId; });
-  closeModal();
-  renderCalendar();
-}
-
-function clearAll() {
-  if (!confirm('确定清空所有活动？此操作不可恢复！')) return;
-  activities = [];
-  renderCalendar();
-}
-
-// ============================================================
-// 导出 - 数据硬编码进HTML，不依赖LocalStorage
-// ============================================================
-function exportHTML() {
-  var dataScript = '<script id="__data__">\nvar activities = ' +
-    JSON.stringify(activities, null, 2) +
-    ';\nvar nextId = ' + nextId + ';\n<\/script>';
-
-  var html = document.documentElement.outerHTML;
-
-  // 替换或插入数据脚本
-  if (html.indexOf('id="__data__"') !== -1) {
-    html = html.replace(/<script id="__data__">[\s\S]*?<\/script>/, dataScript);
-  } else {
-    html = html.replace('</body>', dataScript + '\n</body>');
+/* ---- 统计 ---- */
+function updateStats(){
+  var first=new Date(currentYear,currentMonth,1),last=new Date(currentYear,currentMonth+1,0);
+  var tot=0,ppl=0,grp=0,reg=0;
+  for(var i=0;i<activities.length;i++){
+    var a=activities[i],s=parseDate(a.startDate),e=parseDate(a.endDate||a.startDate);
+    if(s<=last&&e>=first){tot++;ppl+=parseInt(a.people)||0;if(a.color==='#4A7C59')grp++;if(a.color==='#D4784A')reg++;}
   }
-
-  // 清除所有 base64 图片（压缩体积）
-  html = html.replace(/src="data:image\/[^"]{50,}"/g, 'src=""');
-  html = html.replace(/url\(data:image\/[^)]{50,}\)/g, 'url()');
-
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'index.html';
-  a.click();
-  URL.revokeObjectURL(url);
+  document.getElementById('statTotal').textContent=tot;
+  document.getElementById('statPeople').textContent=ppl;
+  document.getElementById('statGroup').textContent=grp;
+  document.getElementById('statRegion').textContent=reg;
 }
 
-// ============================================================
-// 初始化
-// ============================================================
-renderCalendar();
+/* ---- 弹窗逻辑 ---- */
+function openHolidayOnly(ds,hInfo){
+  var html='<div class="modal-title">📅 '+fmtCN(ds)+'</div>'
+    +'<div class="modal-holiday-info"><div style="font-weight:700;margin-bottom:3px">'+(HOLIDAY_TYPE_LABEL[hInfo.type]||'')+'</div><div>'+(hInfo.desc||hInfo.label)+'</div></div>'
+    +'<div style="font-size:13px;color:#aaa;text-align:center;padding:12px 0">本日暂无安排活动</div>';
+  document.getElementById('inviteModalContent').innerHTML=html;
+  openModal('inviteModal');
+}
+function openActivityPicker(ds,hInfo){
+  var da=getActsForDate(ds).filter(function(x){return x.role==='start'||x.role==='single';});
+  var html='<div class="modal-title">📅 '+fmtCN(ds)+'</div>';
+  if(hInfo)html+='<div class="modal-holiday-info"><div style="font-weight:700;margin-bottom:3px">'+(HOLIDAY_TYPE_LABEL[hInfo.type]||'')+'</div><div>'+(hInfo.desc||hInfo.label)+'</div></div>';
+  html+='<div style="font-size:12px;color:#888;margin-bottom:12px">本日共 <strong>'+da.length+'</strong> 场活动，请选择查看：</div>';
+  for(var i=0;i<da.length;i++){
+    var a=da[i].activity;
+    html+='<div class="activity-pick-item" onclick="openSingleActivity_byId('+a.id+',\''+ds+'\')">'
+      +'<span class="activity-pick-dot" style="background:'+a.color+'"></span>'
+      +'<div style="flex:1"><div class="activity-pick-name">'+escH(a.name)+'</div>'
+      +(a.location?'<div class="activity-pick-loc">📍 '+escH(a.location)+'</div>':'')
+      +'</div><span class="activity-pick-arrow">›</span></div>';
+  }
+  document.getElementById('inviteModalContent').innerHTML=html;
+  openModal('inviteModal');
+}
+function openSingleActivity_byId(id,ds){
+  var act=null;
+  for(var i=0;i<activities.length;i++){if(activities[i].id===id){act=activities[i];break;}}
+  if(act)openSingleActivity(act,ds,HOLIDAYS[ds]||null);
+}
+function openSingleActivity(a,ds,hInfo){
+  var isM=a.endDate&&a.endDate!==a.startDate;
+  var dr=isM?fmtCN(a.startDate)+' ~ '+fmtCN(a.endDate):fmtCN(a.startDate);
+  var wid=a.wisdomId?'<span class="wisdom-id-value">'+escH(a.wisdomId)+'</span>':'<span class="wisdom-id-empty">暂未填写</span>';
+  var html='<div class="modal-title">📅 '+fmtCN(ds)+'</div>';
+  if(hInfo)html+='<div class="modal-holiday-info"><div style="font-weight:700;margin-bottom:3px">'+(HOLIDAY_TYPE_LABEL[hInfo.type]||'')+'</div><div>'+(hInfo.desc||hInfo.label)+'</div></div>';
+  html+='<div class="modal-event-block">'
+    +'<span class="modal-badge" style="background:'+a.color+'">'+(COLOR_MAP[a.color]||'')+'</span>'
+    +makeStatusTag(a.status||'soon')
+    +'<div class="modal-meta" style="margin-top:8px">'
+    +'<strong>日期</strong>：'+dr+'<br>'
+    +'<strong>活动名称</strong>：'+escH(a.name)+'<br>'
+    +(a.location?'<strong>地点</strong>：'+escH(a.location)+'<br>':'')
+    +'<strong>可覆盖人数</strong>：'+(a.people||0)+' 人</div>'
+    +'<div class="wisdom-id-row"><span class="wisdom-id-label">🔖 智慧ID</span>'+wid+'</div>'
+    +'<div class="modal-action-row">'
+    +'<button class="btn-action-invite" onclick="openPosterModal('+a.id+')">🖼 活动邀请函</button>'
+    +'<button class="btn-action-intro" onclick="openIntroModal('+a.id+')">📋 活动简介</button>'
+    +'</div></div>';
+  document.getElementById('inviteModalContent').innerHTML=html;
+  openModal('inviteModal');
+}
+function openPosterModal(id){
+  var act=null;
+  for(var i=0;i<activities.length;i++){if(activities[i].id===id){act=activities[i];break;}}
+  if(!act)return;
+  var html='';
+  if(act.poster){
+    html='<div class="poster-modal-inner">'
+      +'<img src="'+act.poster+'" alt="活动邀请函"/>'
+      +'<div class="poster-hint">📱 微信中长按图片→保存到相册<br>💻 电脑端右键图片→另存为</div>'
+      +'<a href="'+act.poster+'" download="'+escH(act.name)+'_邀请函.jpg" class="poster-download-btn">⬇ 下载高清邀请函</a>'
+      +'<button class="poster-replace-btn" onclick="replacePoster('+id+')">🔄 重新上传图片</button>'
+      +'</div>';
+  }else{
+    html='<div class="upload-zone">'
+      +'<input type="file" accept="image/*" onchange="handleUpload(this,'+id+')"/>'
+      +'<div class="upload-zone-icon">📁</div>'
+      +'<div class="upload-zone-text">点击上传邀请函图片</div>'
+      +'<div class="upload-zone-sub">支持 JPG / PNG · 建议上传高清原图</div>'
+      +'</div>';
+  }
+  document.getElementById('posterModalInner').innerHTML=html;
+  openModal('posterModal');
+}
+function replacePoster(id){
+  for(var i=0;i<activities.length;i++){if(activities[i].id===id){activities[i].poster='';break;}}
+  saveToStorage();openPosterModal(id);
+}
+function handleUpload(input,id){
+  if(!input.files||!input.files[0])return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    for(var i=0;i<activities.length;i++){if(activities[i].id===id){activities[i].poster=e.target.result;break;}}
+    saveToStorage();openPosterModal(id);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+function openIntroModal(id){
+  var act=null;
+  for(var i=0;i<activities.length;i++){if(activities[i].id===id){act=activities[i];break;}}
+  if(!act)return;
+  var isM=act.endDate&&act.endDate!==act.startDate;
+  var dr=isM?fmtCN(act.startDate)+' — '+fmtCN(act.endDate):fmtCN(act.startDate);
+  var html='<div class="intro-header">'
+    +'<div class="intro-badge">'+(COLOR_MAP[act.color]||'NOAH ARK')+'</div>'
+    +'<div class="intro-title">'+escH(act.name)+'</div>'
+    +'<div class="intro-subtitle">NOAH · ARK WEALTH</div>'
+    +'</div>'
+    +'<div class="intro-info-grid">'
+    +'<div class="intro-info-card"><div class="intro-info-icon">📅</div><div class="intro-info-label">活动日期</div><div class="intro-info-value">'+dr+'</div></div>'
+    +(act.location?'<div class="intro-info-card"><div class="intro-info-icon">📍</div><div class="intro-info-label">活动地点</div><div class="intro-info-value">'+escH(act.location)+'</div></div>':'')
+    +'<div class="intro-info-card"><div class="intro-info-icon">👥</div><div class="intro-info-label">可覆盖人数</div><div class="intro-info-value">'+(act.people||0)+' 人</div></div>'
+    +'</div>'
+    +(act.desc
+      ?'<div class="intro-desc-box"><div class="intro-desc-label">▸ 活动介绍</div><div class="intro-desc-text">'+escH(act.desc)+'</div></div>'
+      :'<div class="intro-desc-box"><div class="intro-no-desc">暂无活动介绍</div></div>')
+    +'<div class="intro-status-row">'+makeStatusTag(act.status||'soon')+'</div>';
+  document.getElementById('introModalInner').innerHTML=html;
+  openModal('introModal');
+}
+
+/* ---- 活动列表 ---- */
+function renderActivityList(){
+  var c=document.getElementById('activityList');if(!c)return;
+  c.innerHTML='';
+  if(!activities.length){
+    c.innerHTML='<div style="text-align:center;color:#bbb;font-size:12px;padding:20px 0">暂无活动，点击上方按钮添加</div>';
+    return;
+  }
+  for(var i=0;i<activities.length;i++){
+    var a=activities[i];
+    var dl=a.endDate&&a.endDate!==a.startDate?a.startDate+' ~ '+a.endDate:a.startDate;
+    var item=document.createElement('div');item.className='activity-item';
+    item.innerHTML='<div class="activity-item-header">'
+      +'<span class="color-dot" style="background:'+a.color+'"></span>'
+      +'<span class="item-name" title="'+escH(a.name)+'">'+escH(a.name)+'</span>'
+      +'<span class="item-date">'+dl+'</span>'
+      +'<div class="item-actions">'
+      +'<button class="btn-edit" onclick="toggleEditForm('+a.id+')">✏️</button>'
+      +'<button class="btn-del" onclick="confirmDelete('+a.id+')">🗑️</button>'
+      +'</div></div>'
+      +'<div class="edit-form" id="editForm_'+a.id+'"></div>';
+    c.appendChild(item);
+  }
+}
+
+/* ---- 表单 ---- */
+function buildFormHTML(act){
+  var chips='';
+  for(var i=0;i<COLORS.length;i++)
+    chips+='<span class="color-chip" style="background:'+COLORS[i]+'" data-color="'+COLORS[i]+'" title="'+COLOR_MAP[COLORS[i]]+'"></span>';
+  var stOpts=''
+    +'<option value="open"'+(act&&act.status==='open'?' selected':'')+'>🟢 已开放报名</option>'
+    +'<option value="soon"'+(act?(act.status==='soon'?' selected':''):'')+'>🟠 筹备中</option>'
+    +'<option value="ended"'+(act&&act.status==='ended'?' selected':'')+'>⚫ 已结束</option>';
+  return '<div class="form-row"><label class="form-label">活动名称</label>'
+    +'<input class="form-input" data-field="name" value="'+(act?escH(act.name):'')+'" placeholder="请输入活动名称"></div>'
+    +'<div class="form-row"><label class="form-label">日历简称（\\n换行）</label>'
+    +'<input class="form-input" data-field="shortName" value="'+(act?escH(act.shortName||''):'')+'" placeholder="简称（可留空）"></div>'
+    +'<div class="form-row"><label class="form-label">开始日期</label>'
+    +'<input class="form-input" type="date" data-field="startDate" value="'+(act?act.startDate:'')+'"></div>'
+    +'<div class="form-row"><label class="form-label">结束日期（单日留空）</label>'
+    +'<input class="form-input" type="date" data-field="endDate" value="'+(act?(act.endDate||''):'')+'"></div>'
+    +'<div class="form-row"><label class="form-label">地点</label>'
+    +'<input class="form-input" data-field="location" value="'+(act?escH(act.location||''):'')+'" placeholder="活动地点"></div>'
+    +'<div class="form-row"><label class="form-label">可覆盖人数</label>'
+    +'<div class="count-control">'
+    +'<button type="button" class="btn-count" onclick="adjCount(this,-1)">−</button>'
+    +'<input class="form-input" type="number" data-field="people" value="'+(act?act.people||0:0)+'" min="0">'
+    +'<button type="button" class="btn-count" onclick="adjCount(this,1)">＋</button>'
+    +'</div></div>'
+    +'<div class="form-row"><label class="form-label">🔖 智慧ID</label>'
+    +'<input class="form-input" data-field="wisdomId" value="'+(act?escH(act.wisdomId||''):'')+'" placeholder="选填"></div>'
+    +'<div class="form-row"><label class="form-label">活动简介</label>'
+    +'<textarea class="form-input" data-field="desc" style="height:72px;resize:vertical" placeholder="输入活动介绍文字（选填）">'+(act?escH(act.desc||''):'')+'</textarea></div>'
+    +'<div class="form-row"><label class="form-label">活动状态</label>'
+    +'<select class="form-input" data-field="status">'+stOpts+'</select></div>'
+    +'<div class="form-row"><label class="form-label">标签颜色</label>'
+    +'<div class="color-picker-row">'+chips+'</div>'
+    +'<div style="font-size:10px;color:#c5a864;margin-top:3px" data-color-label>'+(act?(COLOR_MAP[act.color]||''):'')+'</div></div>'
+    +'<button class="form-save-btn" onclick="saveFromForm(this)">💾 保存</button>';
+}
+function toggleEditForm(id){
+  var act=null;
+  for(var i=0;i<activities.length;i++)if(activities[i].id===id){act=activities[i];break;}
+  if(!act)return;
+  var el=document.getElementById('editForm_'+id);
+  if(el.classList.contains('open')){el.classList.remove('open');return;}
+  document.querySelectorAll('.edit-form.open').forEach(function(x){x.classList.remove('open');});
+  el.innerHTML=buildFormHTML(act);el.dataset.editId=id;el.classList.add('open');
+  setChip(el,act.color);bindForm(el);
+}
+function bindForm(c){
+  c.querySelectorAll('.color-chip').forEach(function(chip){
+    chip.onclick=function(){
+      c.querySelectorAll('.color-chip').forEach(function(x){x.classList.remove('selected');});
+      chip.classList.add('selected');
+      var lb=c.querySelector('[data-color-label]');if(lb)lb.textContent=COLOR_MAP[chip.dataset.color]||'';
+    };
+  });
+}
+function setChip(c,color){
+  c.querySelectorAll('.color-chip').forEach(function(x){x.classList.toggle('selected',x.dataset.color===color);});
+}
+function adjCount(btn,d){
+  var inp=btn.parentElement.querySelector('[data-field=people]');
+  inp.value=Math.max(0,(parseInt(inp.value)||0)+d);
+}
+function gfv(c,f){var el=c.querySelector('[data-field="'+f+'"]');return el?el.value.trim():'';}
+function saveFromForm(btn){
+  var c=btn.closest('.edit-form')||document.getElementById('addFormContainer');
+  var name=gfv(c,'name');if(!name){alert('请填写活动名称');return;}
+  var sd=gfv(c,'startDate');if(!sd){alert('请选择开始日期');return;}
+  var chip=c.querySelector('.color-chip.selected');
+  var color=chip?chip.dataset.color:COLORS[0];
+  var sn=gfv(c,'shortName').replace(/\\n/g,'\n');
+  var ed=gfv(c,'endDate')||sd;
+  var eid=c.dataset.editId?parseInt(c.dataset.editId):null;
+  if(eid){
+    for(var i=0;i<activities.length;i++){
+      if(activities[i].id===eid){
+        var a=activities[i];
+        a.name=name;a.shortName=sn;a.startDate=sd;a.endDate=ed;
+        a.location=gfv(c,'location');a.people=parseInt(gfv(c,'people'))||0;
+        a.color=color;a.wisdomId=gfv(c,'wisdomId');
+        a.desc=gfv(c,'desc');a.status=gfv(c,'status');
+        break;
+      }
+    }
+  }else{
+    activities.push({id:genId(),name:name,shortName:sn,startDate:sd,endDate:ed,
+      location:gfv(c,'location'),people:parseInt(gfv(c,'people'))||0,
+      color:color,wisdomId:gfv(c,'wisdomId'),
+      desc:gfv(c,'desc'),status:gfv(c,'status'),poster:''});
+    closeModal('addModal');
+  }
+  document.querySelectorAll('.edit-form.open').forEach(function(x){x.classList.remove('open');});
+  saveToStorage();renderCalendar();renderActivityList();
+}
+function openAddModal(){
+  var c=document.getElementById('addFormContainer');
+  c.innerHTML=buildFormHTML(null);c.dataset.editId='';
+  var fc=c.querySelector('.color-chip');if(fc)fc.classList.add('selected');
+  var lb=c.querySelector('[data-color-label]');if(lb)lb.textContent=COLOR_MAP[COLORS[0]]||'';
+  bindForm(c);openModal('addModal');
+}
+function confirmDelete(id){
+  openModal('confirmModal');
+  document.getElementById('confirmYesBtn').onclick=function(){
+    activities=activities.filter(function(a){return a.id!==id;});
+    closeModal('confirmModal');saveToStorage();renderCalendar();renderActivityList();
+  };
+}
+function togglePresent(){
+  isPresentMode=!isPresentMode;
+  document.getElementById('appLayout').classList.toggle('present-mode',isPresentMode);
+  document.getElementById('togglePresentBtn').textContent=isPresentMode?'✏️ 编辑模式':'🖥 演示模式';
+}
+function changeMonth(d){
+  currentMonth+=d;
+  if(currentMonth>11){currentMonth=0;currentYear++;}
+  if(currentMonth<0){currentMonth=11;currentYear--;}
+  renderCalendar();
+}
+
+/* ★ 核心导出函数 */
+function buildExportHTML(){
+  var snap='var currentYear='+currentYear+';\nvar currentMonth='+currentMonth+';\nvar activities='+JSON.stringify(activities)+';\nvar nextId='+nextId+';';
+  var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  html=html.replace(/\/\* ★ EXPORT_ANCHOR_START \*\/[\s\S]*?\/\* ★ EXPORT_ANCHOR_END \*\//,snap);
+  /* ★ 同时清除LocalStorage键，防止导出后被旧数据干扰 */
+  html=html.replace('loadFromStorage();','/* loadFromStorage disabled in export */');
+  return html;
+}
+function exportEditable(){
+  var html=buildExportHTML();
+  /* 还原loadFromStorage，编辑版保留存储功能 */
+  html=html.replace('/* loadFromStorage disabled in export */','loadFromStorage();');
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='ARK上海_'+(currentMonth+1)+'月行事历_可编辑版.html';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+}
+function exportReadonly(){
+  var html=buildExportHTML();
+  var hideCSS='<style id="xhs">'
+    +'#editPanel,#togglePresentBtn,#calToolbar,'
+    +'.btn-add-activity,.save-bar,.activity-list,'
+    +'.panel-header,.holiday-legend{display:none!important}'
+    +'.main-content{flex:1!important}'
+    +'</style>';
+  html=html.replace('</head>',hideCSS+'\n</head>');
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='ARK上海_'+(currentMonth+1)+'月行事历_只读版.html';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+}
+
+/* ---- 弹窗遮罩关闭 ---- */
+['inviteModal','addModal','confirmModal','posterModal','introModal'].forEach(function(mid){
+  var el=document.getElementById(mid);
+  if(el)el.addEventListener('click',function(e){if(e.target===el)closeModal(mid);});
+});
+
+/* ---- 初始化 ---- */
+document.addEventListener('DOMContentLoaded',function(){
+  generateStars();
+  loadFromStorage();
+  renderCalendar();
+  renderActivityList();
+});
 </script>
-</body>
-</html>
+</body></html>
